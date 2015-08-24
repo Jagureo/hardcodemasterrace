@@ -7,6 +7,11 @@ void gotoXY(int x,int y)
     gotoXY(c);
 }
 
+//--------------------------------------------------------------
+// Purpose  : Setting position of the console cursor
+// Input    : Coord (x and y are short)
+// Output   : Nil
+//--------------------------------------------------------------
 void gotoXY(COORD c)
 {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
@@ -65,7 +70,12 @@ void cls( HANDLE hConsole )
     PERR( bSuccess, "SetConsoleCursorPosition" );
     return;
 }
-	
+    
+//--------------------------------------------------------------
+// Purpose  : Check for key press status of specific key
+// Input    : Key to check (Short)
+// Output   : Nil
+//--------------------------------------------------------------
 bool isKeyPressed(unsigned short key)
 {
     return ((GetAsyncKeyState(key) & 0x8001) != 0);
