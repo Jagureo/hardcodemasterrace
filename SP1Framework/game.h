@@ -19,14 +19,16 @@ enum Keys
 
 void init();                // initialize your variables, allocate memory, etc
 void getInput();            // get input from player
-void update(double dt, int &levelunlock, int level1[16][48], int level1reset[16][48], int level1AI[16][48]);     // update the game and the state of the game
-void render(int &levelunlock, int level1[16][48], int level1reset[16][48], int level1AI[16][48]);              // renders the current state of the game to the console
+void update(double dt);     // update the game and the state of the game
+void render();              // renders the current state of the game to the console
 void shutdown();            // do clean up, free memory
 int levelselect();
-void resetlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][48]);
+void resetlevel();
 void errorreport();
 int achievement();
 int challenge();
 int menu();
+int newmainmenu();
+bool collisiondetection(int x);
 
 #endif // _GAME_H

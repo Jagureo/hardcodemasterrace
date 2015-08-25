@@ -3,11 +3,11 @@
 //
 #include "game.h"
 #include "Framework\console.h"
+#include "levelmap.txt"
 #include <iostream>
 #include <iomanip>
 #include <conio.h>
 #include <string>
-#include <sstream>
 #include <fstream>
 #include <ctime>
 using std::cin;
@@ -18,6 +18,15 @@ double elapsedTime;
 double deltaTime;
 bool keyPressed[K_COUNT];
 int levelnumber;
+int y;
+bool levelfix = true;
+bool keyinputaa = true;
+int rainbowhere = 9;
+int gamestate = 1;
+int levelno = 1;
+int level1[16][48];
+int level1reset[16][48];
+int level1AI[16][48];
 COORD charLocation;
 COORD consoleSize;
 
@@ -27,6 +36,47 @@ const WORD colors[] =   {
 							0x0F, 0x0E, 0x09, 0x0A, 0x0C
 	                        };
 
+const WORD colorskappa[] =  {
+	                        0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+							0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C,
+							0x0D, 0x0E, 0x0F
+	                        };
+
+int newmainmenu()
+{
+	while (true)
+	{
+		keyinputaa = true;
+		colour(colors[15]);
+		int x = menu();
+		switch (x)
+		{
+		case 1:
+			while (levelfix)
+			{
+				y = levelselect();
+				if(y == 68)
+				{
+					levelfix = false;
+				}
+				else
+				{
+					return y;
+				}
+			}
+			levelfix = true;
+			break;
+		case 2:
+			challenge();
+			break;
+		case 3:
+			achievement();
+			break;
+		case 69:
+			return 69;
+		}
+	}
+}
 
 void init()
 {
@@ -71,9 +121,7 @@ void getInput()
 	keyPressed[K_RETURN] = isKeyPressed(VK_RETURN);
 }
 
-
-
-void renderlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][48]){
+void loadlevel(){
 	//laser up
 	if(level1[charLocation.Y-2][charLocation.X] == 15) //up
 	{
@@ -216,10 +264,10 @@ void renderlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][4
 	}
 	//
 	//laser right
-	if(level1[charLocation.Y-2][charLocation.X] == 18) //up
+	if(level1[charLocation.Y-2][charLocation.X] == 17) //up
 	{
-		level1[charLocation.Y-2][charLocation.X] = 22;
-		for(int k = 1; (charLocation.X)+k >= 49; k++)
+		level1[charLocation.Y-2][charLocation.X] = 23;
+		for(int k = 1; (charLocation.X)+k <= 49; k++)
 		{
 			if((level1[(charLocation.Y-2)][charLocation.X+k] == 25))
 			{
@@ -231,9 +279,9 @@ void renderlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][4
 			}
 		}
 	}
-	if(level1[charLocation.Y][charLocation.X] == 18) //down
+	if(level1[charLocation.Y][charLocation.X] == 17) //down
 	{
-		level1[charLocation.Y][charLocation.X] = 22;
+		level1[charLocation.Y][charLocation.X] = 23;
 		for(int k = 1; charLocation.X+k <= 49; k++)
 		{
 			if((level1[charLocation.Y][charLocation.X+k] == 25))
@@ -246,9 +294,9 @@ void renderlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][4
 			}
 		}
 	}
-	if(level1[charLocation.Y-1][charLocation.X+1] == 16) //right
+	if(level1[charLocation.Y-1][charLocation.X+1] == 17) //right
 	{
-		level1[charLocation.Y-1][charLocation.X+1] = 20;
+		level1[charLocation.Y-1][charLocation.X+1] = 23;
 		for(int k = 1; (charLocation.X+1)+k <= 49; k++)
 		{
 			if((level1[(charLocation.Y-1)][charLocation.X+1+k] == 25))
@@ -285,7 +333,7 @@ void renderlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][4
 				}
 				else if(level1[i][j] == 16)
 				{
-					for(int k = 1; i+k >= 12; k++)
+					for(int k = 1; i+k <= 12; k++)
 					{
 						if((level1[i+k][j] == 1)||level1[i+k][j] == 5)
 						{
@@ -936,7 +984,7 @@ void renderlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][4
 	}
 }
 
-void renderlight(int level1[16][48], int level1reset[16][48], int level1AI[16][48]){
+void loadlight(){
 	for(int i = 0; i < 16; i++)
 	{
 		for(int j = 0; j < 48; j++)
@@ -1024,7 +1072,7 @@ void renderlight(int level1[16][48], int level1reset[16][48], int level1AI[16][4
 	}
 }
 
-void resetlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][48])
+void resetlevel()
 {
 	for (int i = 0; i < 16; ++i)
 	{
@@ -1038,201 +1086,371 @@ void resetlevel(int level1[16][48], int level1reset[16][48], int level1AI[16][48
 	elapsedTime = 0.0;
 }
 
-void render(int &levelunlock, int level1[16][48], int level1reset[16][48], int level1AI[16][48])
+void render()
 {
-	renderlevel(level1, level1reset, level1AI);
-	renderlight(level1, level1reset, level1AI);
-    // clear previous screen
-    colour(0x0F);
-    cls();
-
-    //render the game
-
-    //render test screen code (not efficient at all)
-    /*const WORD colors[] =   {
-	                        0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-	                        0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6,
-							0x0F, 0x0E, 0x09, 0x0A
-	                        };*/
-	
-	/*for (int i = 0; i < 12; ++i)
+	if(gamestate == 1)
 	{
-		gotoXY(3*i,i+1);
-		colour(colors[i]);
-		std::cout << "WOW";
-	}*/
-	for (int i = 0; i < 16; ++i)
-	{
-		for(int j = 0; j < 48; ++j)
+		int x = newmainmenu();
+		if(x == 69)
 		{
-			colour(colors[12]);
-			gotoXY(j,i+1);
-			if(level1[i][j] == 0)
-			{
-				cout << static_cast<char>(6363);
-			}
-			else if(level1[i][j] == 1)
-			{
-				cout << ' ';
-			}
-			else if(level1[i][j] == 2)
-			{
-				cout << static_cast<char>(1);
-			}
-			else if(level1[i][j] == 3)
-			{
-				cout << static_cast<char>(2);
-			}
-			else if(level1[i][j] == 4)
-			{
-				cout << static_cast<char>(2);
-			}
-			else if(level1[i][j] == 6)
-			{
-				cout << static_cast<char>(2);
-			}
-			else if(level1[i][j] == 7)
-			{
-				cout << static_cast<char>(2);
-			}
-			else if(level1[i][j] == 5)
-			{
-				colour(colors[13]);
-				cout << static_cast<char>(15);
-			}
-			else if(level1[i][j] == 15)
-			{
-				colour(colors[16]);
-				cout << '^';
-			}
-			else if(level1[i][j] == 16)
-			{
-				colour(colors[16]);
-				cout << 'V';
-			}
-			else if(level1[i][j] == 17)
-			{
-				colour(colors[16]);
-				cout << '>';
-			}
-			else if(level1[i][j] == 18)
-			{
-				colour(colors[16]);
-				cout << '<';
-			}
-			else if(level1[i][j] == 19)
-			{
-				cout << '^';
-			}
-			else if(level1[i][j] == 20)
-			{
-				cout << 'V';
-			}
-			else if(level1[i][j] == 23)
-			{
-				cout << '>';
-			}
-			else if(level1[i][j] == 22)
-			{
-				cout << '<';
-			}
-			else if(level1[i][j] == 21)
-			{
-				colour(colors[16]);
-				cout << '|';
-			}
-			else if(level1[i][j] == 25)
-			{
-				colour(colors[16]);
-				cout << '-';
-			}
-			else if(level1[i][j] == 69)
-			{
-				cout << 'x';
-			}
-			cout << endl;
+			g_quitGame = true;
+			return;
 		}
-		if(level1[charLocation.Y-1][charLocation.X] == 69)
+		else if(x == 1)
 		{
-			gotoXY (0, 19);
-			cout<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<endl;
-			cout<<"    "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"  "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<endl;
-			cout<<"    "<<" "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<" "<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<endl;
-			cout<<"    "<<"  "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<"  "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<endl;
-			cout<<"    "<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<" "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<endl;
-			cout<<"    "<<"   "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"      "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-			cout<<"    "<<"        Press ESC to exit to Level Select screen";
-			levelunlock = 2;
-			_getch();
-			resetlevel(level1, level1reset, level1AI);
-			renderlevel(level1, level1reset, level1AI);
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = blevel1[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1reset[i][j] = blevel1reset[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = blevel1AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+			render();
 		}
-		else if(level1[charLocation.Y-1][charLocation.X] != 1)
+		else if(x == 2)
 		{
-			gotoXY (0, 19);
-			cout<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<"      "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<endl;
-			cout<<"    "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"     "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-			cout<<"    "<<" "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<" "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"     "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<endl;
-			cout<<"    "<<"  "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<"  "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"     "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-			cout<<"    "<<"   "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<"   "<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<"    "<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<static_cast<char>(200)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(186)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(6363)<<static_cast<char>(187)<<endl;
-			cout<<"    "<<"   "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"     "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-			cout<<"    "<<"                     The level has been reset";
-			_getch();
-			resetlevel(level1, level1reset, level1AI);
-			renderlevel(level1, level1reset, level1AI);
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level2[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1reset[i][j] = level2reset[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level2AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+			render();
+		}
+		else
+		{
+			errorreport();
+			return;
 		}
 	}
-    // render time taken to calculate this frame
-    gotoXY(70, 0);
-    colour(0x1A);
-    std::cout << 1.0 / deltaTime << "fps" << std::endl;
+	else
+	{
+		if(!keyinputaa)
+		{
+			return;
+		}
+		keyinputaa = false;
+
+		loadlevel();
+		loadlight();
+
+		// clear previous screen
+		colour(0x0F);
+		cls();
+
+		//render the game
+
+		//render test screen code (not efficient at all)
+		/*const WORD colors[] =   {
+								0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
+								0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6,
+								0x0F, 0x0E, 0x09, 0x0A
+								};*/
+	
+		/*for (int i = 0; i < 12; ++i)
+		{
+			gotoXY(3*i,i+1);
+			colour(colors[i]);
+			std::cout << "WOW";
+		}*/
+		gotoXY(0,1);
+		for (int i = 0; i < 16; ++i)
+		{
+			for(int j = 0; j < 48; ++j)
+			{
+				//colour(colors[12]);
+				//gotoXY(j,i+1);
+				if(level1[i][j] == 0)
+				{
+					cout << static_cast<char>(219);
+					continue;
+				}
+				else if(level1[i][j] == 1)
+				{
+					cout << ' ';
+					continue;
+				}
+				else if(level1[i][j] == 2)
+				{
+					cout << static_cast<char>(1);
+					continue;
+				}
+				else if((level1[i][j] == 3)||(level1[i][j] == 4)||(level1[i][j] == 6)||(level1[i][j] == 7))
+				{
+					cout << static_cast<char>(2);
+					continue;
+				}
+				else if(level1[i][j] == 5)
+				{
+					colour(colors[13]);
+					cout << static_cast<char>(15);
+					colour(colors[12]);
+					continue;
+				}
+				else if((level1[i][j] == 15)||(level1[i][j] == 16)||(level1[i][j] == 17)||(level1[i][j] == 18))
+				{
+					colour(colors[16]);
+					if(level1[i][j] == 15)
+					{
+						cout << '^';
+					}
+					else if(level1[i][j] == 16)
+					{
+						cout << 'V';
+					}
+					else if(level1[i][j] == 17)
+					{
+						cout << '>';
+					}
+					else if(level1[i][j] == 18)
+					{
+						cout << '<';
+					}
+					colour(colors[12]);
+					continue;
+				}
+				else if(level1[i][j] == 19)
+				{
+					cout << '^';
+					continue;
+				}
+				else if(level1[i][j] == 20)
+				{
+					cout << 'V';
+					continue;
+				}
+				else if(level1[i][j] == 23)
+				{
+					cout << '>';
+					continue;
+				}
+				else if(level1[i][j] == 22)
+				{
+					cout << '<';
+					continue;
+				}
+				else if(level1[i][j] == 21)
+				{
+					colour(colors[16]);
+					cout << '|';
+					colour(colors[12]);
+					continue;
+				}
+				else if(level1[i][j] == 25)
+				{
+					colour(colors[16]);
+					cout << '-';
+					colour(colors[12]);
+					continue;
+				}
+				else if(level1[i][j] == 69)
+				{
+					cout << 'x';
+					continue;
+				}
+			}
+			cout << '\n';
+		}
+		if(level1[charLocation.Y-1][charLocation.X] == 69)
+			{
+				resetlevel();
+				//loadlevel();
+				keyinputaa = true;
+				render();
+				gotoXY (0, 19);
+				colour(colorskappa[14]);
+				cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
+				cout<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"  "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
+				cout<<"    "<<" "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<" "<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
+				cout<<"    "<<"  "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"  "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
+				cout<<"    "<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<" "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
+				cout<<"    "<<"   "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"      "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
+				cout<<"    "<<"        Press ESC to exit to Level Select screen";
+				_getch();
+				
+			}
+			else if(level1[charLocation.Y-1][charLocation.X] != 1)
+			{
+				resetlevel();
+				//loadlevel();
+				keyinputaa = true;
+				render();
+				gotoXY (0, 19);
+				colour(colorskappa[14]);
+				cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"      "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
+				cout<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"     "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
+				cout<<"    "<<" "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"     "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
+				cout<<"    "<<"  "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"  "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"     "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
+				cout<<"    "<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
+				cout<<"    "<<"   "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"     "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
+				cout<<"    "<<"                     The level has been reset";
+				/*for(int i = 0; i < 7; i++)
+				{
+					cout << "    ";
+					for(int j = 0; j < 54; j++)
+					{
+						cout << static_cast<char>(nishu[i][j]);
+					}
+					cout << endl;
+				}*/
+				_getch();
+				
+			}
+		// render time taken to calculate this frame
+		gotoXY(70, 0);
+		colour(0x1A);
+		std::cout << 1.0 / deltaTime << "fps" << std::endl;
   
-    gotoXY(0, 0);
-    colour(0x59);
-    std::cout << elapsedTime << "secs" << std::endl;
+		gotoXY(0, 0);
+		colour(0x59);
+		std::cout << elapsedTime << "secs" << std::endl;
 
-    // render character
-    gotoXY(charLocation);
-    colour(0x0C);
-    std::cout << (char)1;
-
+		// render character
+		gotoXY(charLocation);
+		colour(0x0C);
+		std::cout << (char)1;
+	}
 }
 
-void update(double dt, int &levelunlock, int level1[16][48], int level1reset[16][48], int level1AI[16][48])
+void update(double dt)
 {
     // get the delta time
     elapsedTime += dt;
     deltaTime = dt;
 
     // Updating the location of the character based on the key press
-    if (keyPressed[K_UP] && charLocation.Y > 0 && level1[charLocation.Y-2][charLocation.X] != 0 && level1[charLocation.Y-2][charLocation.X] != 15 && level1[charLocation.Y-2][charLocation.X] != 16 && level1[charLocation.Y-2][charLocation.X] != 17 && level1[charLocation.Y-2][charLocation.X] != 18 && level1[charLocation.Y-2][charLocation.X] != 19 && level1[charLocation.Y-2][charLocation.X] != 20 && level1[charLocation.Y-2][charLocation.X] != 22 && level1[charLocation.Y-2][charLocation.X] != 23)
+    if (keyPressed[K_UP])
     {
-        Beep(1440, 60);
-        charLocation.Y--; 
-		render(levelunlock, level1, level1reset, level1AI);
+		bool nocollide = collisiondetection(1);
+		if(nocollide)
+		{
+			Beep(1440, 60);
+			charLocation.Y--; 
+			keyinputaa = true;
+		}
+		//render();
     }
-    else if (keyPressed[K_LEFT] && charLocation.X > 0 && level1[charLocation.Y-1][charLocation.X-1] != 0 && level1[charLocation.Y-1][charLocation.X-1] != 15 && level1[charLocation.Y-1][charLocation.X-1] != 16 && level1[charLocation.Y-1][charLocation.X-1] != 17 && level1[charLocation.Y-1][charLocation.X-1] != 18 && level1[charLocation.Y-1][charLocation.X-1] != 19 && level1[charLocation.Y-1][charLocation.X-1] != 20 && level1[charLocation.Y-1][charLocation.X-1] != 22 && level1[charLocation.Y-1][charLocation.X-1] != 23)
+    else if (keyPressed[K_LEFT])
     {
-        Beep(1440, 60);
-        charLocation.X--; 
-		render(levelunlock, level1, level1reset, level1AI);
+		bool nocollide = collisiondetection(2);
+		if(nocollide)
+		{
+			Beep(1440, 60);
+			charLocation.X--; 
+			keyinputaa = true;
+		}
+		//render();
     }
-    else if (keyPressed[K_DOWN] && charLocation.Y < consoleSize.Y - 1 && level1[charLocation.Y][charLocation.X] != 0 && level1[charLocation.Y][charLocation.X] != 15 && level1[charLocation.Y][charLocation.X] != 16 && level1[charLocation.Y][charLocation.X] != 17 && level1[charLocation.Y][charLocation.X] != 18 && level1[charLocation.Y][charLocation.X] != 19 && level1[charLocation.Y][charLocation.X] != 20 && level1[charLocation.Y][charLocation.X] != 22 && level1[charLocation.Y][charLocation.X] != 23)
+    else if (keyPressed[K_DOWN])
     {
-        Beep(1440, 60);
-        charLocation.Y++; 
-		render(levelunlock, level1, level1reset, level1AI);
+		bool nocollide = collisiondetection(3);
+		if(nocollide)
+		{
+			Beep(1440, 60);
+			charLocation.Y++; 
+			keyinputaa = true;
+		}
+		//render();
     }
-    else if (keyPressed[K_RIGHT] && charLocation.X < consoleSize.X - 1 && level1[charLocation.Y-1][charLocation.X+1] != 0 && level1[charLocation.Y-1][charLocation.X+1] != 15 && level1[charLocation.Y-1][charLocation.X+1] != 16 && level1[charLocation.Y-1][charLocation.X+1] != 17 && level1[charLocation.Y-1][charLocation.X+1] != 18 && level1[charLocation.Y-1][charLocation.X+1] != 19 && level1[charLocation.Y-1][charLocation.X+1] != 20 && level1[charLocation.Y-1][charLocation.X+1] != 22 && level1[charLocation.Y-1][charLocation.X+1] != 23)
+    else if (keyPressed[K_RIGHT])
     {
-        Beep(1440, 60);
-        charLocation.X++; 
-		render(levelunlock, level1, level1reset, level1AI);
+		bool nocollide = collisiondetection(4);
+		if(nocollide)
+		{
+			Beep(1440, 60);
+			charLocation.X++; 
+			keyinputaa = true;
+		}
+		//render();
     }
 
-    // quits the game if player hits the escape key
+    // quits the game i	f player hits the escape key
     if (keyPressed[K_ESCAPE])
-        g_quitGame = true;
+		gamestate = 1;
+        //g_quitGame = true;
+}
+
+bool collisiondetection(int x)
+{
+	if (x == 1)
+	{
+		if(charLocation.Y > 0 && level1[charLocation.Y-2][charLocation.X] != 0 && level1[charLocation.Y-2][charLocation.X] != 15 && level1[charLocation.Y-2][charLocation.X] != 16 && level1[charLocation.Y-2][charLocation.X] != 17 && level1[charLocation.Y-2][charLocation.X] != 18 && level1[charLocation.Y-2][charLocation.X] != 19 && level1[charLocation.Y-2][charLocation.X] != 20 && level1[charLocation.Y-2][charLocation.X] != 22 && level1[charLocation.Y-2][charLocation.X] != 23)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else if (x == 2)
+	{
+		if(charLocation.X > 0 && level1[charLocation.Y-1][charLocation.X-1] != 0 && level1[charLocation.Y-1][charLocation.X-1] != 15 && level1[charLocation.Y-1][charLocation.X-1] != 16 && level1[charLocation.Y-1][charLocation.X-1] != 17 && level1[charLocation.Y-1][charLocation.X-1] != 18 && level1[charLocation.Y-1][charLocation.X-1] != 19 && level1[charLocation.Y-1][charLocation.X-1] != 20 && level1[charLocation.Y-1][charLocation.X-1] != 22 && level1[charLocation.Y-1][charLocation.X-1] != 23)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else if (x == 3)
+	{
+		if(charLocation.Y < consoleSize.Y - 1 && level1[charLocation.Y][charLocation.X] != 0 && level1[charLocation.Y][charLocation.X] != 15 && level1[charLocation.Y][charLocation.X] != 16 && level1[charLocation.Y][charLocation.X] != 17 && level1[charLocation.Y][charLocation.X] != 18 && level1[charLocation.Y][charLocation.X] != 19 && level1[charLocation.Y][charLocation.X] != 20 && level1[charLocation.Y][charLocation.X] != 22 && level1[charLocation.Y][charLocation.X] != 23)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else if (x == 4)
+	{
+		if(charLocation.X < consoleSize.X - 1 && level1[charLocation.Y-1][charLocation.X+1] != 0 && level1[charLocation.Y-1][charLocation.X+1] != 15 && level1[charLocation.Y-1][charLocation.X+1] != 16 && level1[charLocation.Y-1][charLocation.X+1] != 17 && level1[charLocation.Y-1][charLocation.X+1] != 18 && level1[charLocation.Y-1][charLocation.X+1] != 19 && level1[charLocation.Y-1][charLocation.X+1] != 20 && level1[charLocation.Y-1][charLocation.X+1] != 22 && level1[charLocation.Y-1][charLocation.X+1] != 23)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
 int levelselect()
@@ -1373,7 +1591,7 @@ int levelselect()
 		else if(keyPressed[K_ESCAPE])
 		{
 			cout << "hello my friends";
-			return 69;
+			return 68;
 		}
 	}
 }
@@ -1407,7 +1625,13 @@ int menu()
     cout << "  | . \\ (_| | |_) | |_) | (_| | " << endl;    
     cout << "  |_|\\_\\__,_| .__/| .__/ \\__,_| " << endl;   
     cout << "            | |   | |           "<< endl ;  
-    cout << "            |_|   |_|           " << endl;         
+    cout << "            |_|   |_|           " << endl;        
+	rainbowhere += 1;
+	if(rainbowhere > 14)
+	{
+		rainbowhere = 9;
+	}
+	colour(colorskappa[rainbowhere]);
     //cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;     
     cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(219)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl;   
     cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
@@ -1423,7 +1647,8 @@ int menu()
     cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
     cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(219)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(177)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;  
     cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(219)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176);
-    gotoXY(45,14);
+    colour(colors[15]);
+	gotoXY(45,14);
     cout << " Welcome to  " ;         
     gotoXY(45,15);   
     cout << " 'The Great Kappa' game! " ;                
