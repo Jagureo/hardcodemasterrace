@@ -989,6 +989,7 @@ void loadlight(){
 	{
 		for(int j = 0; j < 48; j++)
 		{
+			//guard
 			//moving left
 			if(level1[i][j] == 3)
 			{
@@ -1066,6 +1067,65 @@ void loadlight(){
 			else if(level1[i][j] == 8)
 			{
 				level1[i][j] = 7;
+			}
+			//
+			//
+			//laser
+			if(level1[i][j] == 15)
+			{
+				for(int k = i-1; k >= 0; k--)
+				{
+					if((level1[k][j] == 1)||(level1[k][j] == 5))
+					{
+						level1[k][j] = 21;
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			else if(level1[i][j] == 16)
+			{
+				for(int k = i+1; k <= 16; k++)
+				{
+					if((level1[k][j] == 1)||(level1[k][j] == 5))
+					{
+						level1[k][j] = 21;
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			else if(level1[i][j] == 17)
+			{
+				for(int k = j+1; k <= 48; k++)
+				{
+					if((level1[i][k] == 1)||(level1[i][k] == 5))
+					{
+						level1[i][k] = 25;
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			else if(level1[i][j] == 18)
+			{
+				for(int k = j-1; k >= 0; k--)
+				{
+					if((level1[i][k] == 1)||(level1[i][k] == 5))
+					{
+						level1[i][k] = 25;
+					}
+					else
+					{
+						break;
+					}
+				}
 			}
 			//
 		}
