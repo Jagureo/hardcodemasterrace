@@ -190,7 +190,7 @@ void loadlevel(){
 		level1[charLocation.Y-1][charLocation.X-1] = 20;
 		for(int k = 1; (charLocation.Y-1)+k <= 17; k++)
 		{
-			if((level1[charLocation.Y-1+k][charLocation.X-1] == 21))
+			if((level1[charLocation.Y-1+k][charLocation.X-1] == 21)||(level1[charLocation.Y-1+k][charLocation.X-1] == 25))
 			{
 				level1[charLocation.Y-1+k][charLocation.X-1] = 1;
 			}
@@ -205,7 +205,7 @@ void loadlevel(){
 		level1[charLocation.Y-1][charLocation.X+1] = 20;
 		for(int k = 1; (charLocation.Y-1)+k <= 17; k++)
 		{
-			if(level1[(charLocation.Y-1)+k][charLocation.X+1] == 21)
+			if((level1[(charLocation.Y-1)+k][charLocation.X+1] == 21)||(level1[(charLocation.Y-1)+k][charLocation.X+1] == 25))
 			{
 				level1[(charLocation.Y-1)+k][charLocation.X+1] = 1;
 			}
@@ -222,7 +222,7 @@ void loadlevel(){
 		level1[charLocation.Y-2][charLocation.X] = 22;
 		for(int k = 1; charLocation.X-k >= 0; k++)
 		{
-			if((level1[charLocation.Y-2][charLocation.X-k] == 25))
+			if((level1[charLocation.Y-2][charLocation.X-k] == 25)||(level1[charLocation.Y-2][charLocation.X-k] == 21))
 			{
 				level1[charLocation.Y-2][charLocation.X-k] = 1;
 			}
@@ -237,7 +237,7 @@ void loadlevel(){
 		level1[charLocation.Y][charLocation.X] = 22;
 		for(int k = 1; charLocation.X-k >= 0; k++)
 		{
-			if((level1[charLocation.Y][charLocation.X-k] == 25))
+			if((level1[charLocation.Y][charLocation.X-k] == 25)||(level1[charLocation.Y][charLocation.X-k] == 21))
 			{
 				level1[charLocation.Y][charLocation.X-k] = 1;
 			}
@@ -252,7 +252,7 @@ void loadlevel(){
 		level1[charLocation.Y-1][charLocation.X-1] = 22;
 		for(int k = 1; (charLocation.X-1)-k >= 0; k++)
 		{
-			if(level1[(charLocation.Y-1)][charLocation.X-1-k] == 25)
+			if((level1[(charLocation.Y-1)][charLocation.X-1-k] == 25)||(level1[(charLocation.Y-1)][charLocation.X-1-k] == 21))
 			{
 				level1[(charLocation.Y-1)][charLocation.X-1-k] = 1;
 			}
@@ -269,7 +269,7 @@ void loadlevel(){
 		level1[charLocation.Y-2][charLocation.X] = 23;
 		for(int k = 1; (charLocation.X)+k <= 49; k++)
 		{
-			if((level1[(charLocation.Y-2)][charLocation.X+k] == 25))
+			if((level1[(charLocation.Y-2)][charLocation.X+k] == 25)||(level1[(charLocation.Y-2)][charLocation.X+k] == 21))
 			{
 				level1[(charLocation.Y-2)][charLocation.X+k] = 1;
 			}
@@ -284,7 +284,7 @@ void loadlevel(){
 		level1[charLocation.Y][charLocation.X] = 23;
 		for(int k = 1; charLocation.X+k <= 49; k++)
 		{
-			if((level1[charLocation.Y][charLocation.X+k] == 25))
+			if((level1[charLocation.Y][charLocation.X+k] == 25)||(level1[charLocation.Y][charLocation.X+k] == 21))
 			{
 				level1[charLocation.Y][charLocation.X+k] = 1;
 			}
@@ -299,7 +299,7 @@ void loadlevel(){
 		level1[charLocation.Y-1][charLocation.X+1] = 23;
 		for(int k = 1; (charLocation.X+1)+k <= 49; k++)
 		{
-			if((level1[(charLocation.Y-1)][charLocation.X+1+k] == 25))
+			if((level1[(charLocation.Y-1)][charLocation.X+1+k] == 25)||(level1[(charLocation.Y-1)][charLocation.X+1+k] == 21))
 			{
 				level1[(charLocation.Y-1)][charLocation.X+1+k] = 1;
 			}
