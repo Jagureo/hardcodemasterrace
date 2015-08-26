@@ -1075,7 +1075,7 @@ void loadlight(){
 			{
 				for(int k = i-1; k >= 0; k--)
 				{
-					if((level1[k][j] == 1)||(level1[k][j] == 5))
+					if((level1[k][j] == 1)||(level1[k][j] == 5)||(level1[k][j] == 21)||(level1[k][j] == 25)||(level1[k][j] == 26))
 					{
 						level1[k][j] = 21;
 					}
@@ -1089,7 +1089,7 @@ void loadlight(){
 			{
 				for(int k = i+1; k <= 16; k++)
 				{
-					if((level1[k][j] == 1)||(level1[k][j] == 5))
+					if((level1[k][j] == 1)||(level1[k][j] == 5)||(level1[k][j] == 21)||(level1[k][j] == 25)||(level1[k][j] == 26))
 					{
 						level1[k][j] = 21;
 					}
@@ -1103,9 +1103,13 @@ void loadlight(){
 			{
 				for(int k = j+1; k <= 48; k++)
 				{
-					if((level1[i][k] == 1)||(level1[i][k] == 5))
+					if((level1[i][k] == 1)||(level1[i][k] == 5)||(level1[i][k] == 25)||(level1[i][k] == 26))
 					{
 						level1[i][k] = 25;
+					}
+					else if (level1[i][k] == 21)
+					{
+						level1[i][k] = 26;
 					}
 					else
 					{
@@ -1117,9 +1121,13 @@ void loadlight(){
 			{
 				for(int k = j-1; k >= 0; k--)
 				{
-					if((level1[i][k] == 1)||(level1[i][k] == 5))
+					if((level1[i][k] == 1)||(level1[i][k] == 5)||(level1[i][k] == 25)||(level1[i][k] == 26))
 					{
 						level1[i][k] = 25;
+					}
+					else if (level1[i][k] == 21)
+					{
+						level1[i][k] = 26;
 					}
 					else
 					{
