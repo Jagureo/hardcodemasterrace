@@ -3,25 +3,60 @@
 
 #include "Framework\timer.h"
 
-extern StopWatch g_timer;
-extern bool g_quitGame;
+extern CStopWatch g_swTimer;
+extern bool g_bQuitGame;
 
-enum Keys
+// Enumeration to store the control keys that your game will have
+enum EKEYS
 {
     K_UP,
     K_DOWN,
     K_LEFT,
     K_RIGHT,
     K_ESCAPE,
+    K_SPACE,
     K_COUNT,
 	K_RETURN
 };
 
-void init();                // initialize your variables, allocate memory, etc
-void getInput();            // get input from player
-void update(double dt);     // update the game and the state of the game
-void render();              // renders the current state of the game to the console
-void shutdown();            // do clean up, free memory
+// Enumeration for the different screen states
+enum EGAMESTATES
+{
+    S_SPLASHSCREEN,
+    S_GAME,
+	S_MainMenu,
+	S_LevelMenu,
+	S_ChallengeMenu,
+	S_StatsMenu,
+	//?S_Exit,
+    S_COUNT
+};
+
+// struct for the game character
+struct SGameChar
+{
+    COORD m_cLocation;
+    bool  m_bActive;
+};
+
+void init        ( void );      // initialize your variables, allocate memory, etc
+void getInput    ( void );      // get input from player
+void update      ( double dt ); // update the game and the state of the game
+void render      ( void );      // renders the current state of the game to the console
+void shutdown    ( void ); 
+// do clean up, free memory
+void renderMap();           // renders the map to the buffer first
+void splashScreenWait();    // waits for time to pass in splash screen
+void gameplay();            // gameplay logic
+void moveCharacter();       // moves the character, collision detection, physics, etc
+void processUserInput();    // checks if you should change states or do something else with the game, e.g. pause, exit
+void clearScreen();         // clears the current screen and draw from scratch 
+void renderSplashScreen();  // renders the splash screen
+void renderGame();          // renders the game stuff
+         
+void renderCharacter();     // renders the character into the buffer
+void renderFramerate();     // renders debug information, frame rate, elapsed time, etc
+void renderToScreen();      // dump the contents of the buffer to the screen, one frame worth of game
 int levelselect();
 void resetlevel();
 void errorreport();
@@ -31,4 +66,16 @@ int menu();
 int newmainmenu();
 bool collisiondetection(int x);
 
+void renderMainMenu();
+
+void renderLevelSelect();
+void renderChallenges();		
+void renderStats();
+void updateSplashScreen();
+
+void updateMainMenu();
+void updateGame();
+void updateLevelSelect();
+void updateChallenges();
+void updateStats();
 #endif // _GAME_H

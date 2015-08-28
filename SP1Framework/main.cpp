@@ -2,40 +2,45 @@
 
 #include "Framework\timer.h"
 #include "game.h"
-#include "splash.h"
 
+CStopWatch g_Timer;                            // Timer function to keep track of time and the frame rate
+bool g_bQuitGame = false;                    // Set to true if you want to quit the game
+const unsigned char gc_ucFPS = 9;                // FPS of this game
+const unsigned int gc_uFrameTime = 1000 / gc_ucFPS;    // time for each frame
 
-StopWatch g_timer;            // Timer function to keep track of time and the frame rate
-bool g_quitGame = false;      // Set to true if you want to quit the game
-const unsigned char FPS = 9; // FPS of this game
-const unsigned int frameTime = 1000 / FPS; // time for each frame
-int menuselect = 0;
-
-void mainLoop();
+//main loop declaration
+void mainLoop( void );
 
 // TODO:
-// Bug in waitUnitil. it waits for the time from getElapsedTime to waitUntil, but should be insignificant.
+// Bug in waitUntil. it waits for the time from getElapsedTime to waitUntil, but should be insignificant.
 
-int main() 
+// main function - starting function
+// You should not be modifying this unless you know what you are doing
+int main( void )
 {
-	splash();
-	init();      // initialize your variables
+	
+    init();      // initialize your variables
     mainLoop();  // main loop
     shutdown();  // do clean up, if any. free memory.
-	return 0;
+    
+    return 0;
 }
 
-// This main loop calls functions to get input, update and render the game
-// at a specific frame rate
-void mainLoop()
+//--------------------------------------------------------------
+// Purpose  : This main loop calls functions to get input, 
+//            update and render the game at a specific frame rate
+//            You should not be modifying this unless you know what you are doing.
+// Input    : void
+// Output   : void
+//--------------------------------------------------------------
+void mainLoop( void )
 {
-    g_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-    while (!g_quitGame)      // run this loop until user wants to quit 
-	{        
+    g_Timer.startTimer();    // Start timer to calculate how long it takes to render this frame
+    while (!g_bQuitGame)      // run this loop until user wants to quit 
+    {        
         getInput();                         // get keyboard input
-		update(g_timer.getElapsedTime());   // update the game
+        update(g_Timer.getElapsedTime());   // update the game
         render();                           // render the graphics output to screen
-        g_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.      
-	}
-	g_quitGame = false;
+        g_Timer.waitUntil(gc_uFrameTime);   // Frame rate limiter. Limits each frame to a specified time in ms.      
+    }    
 }
