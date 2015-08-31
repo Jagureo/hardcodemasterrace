@@ -2242,7 +2242,7 @@ int menu()
       
 	c.X = 48;
     c.Y = 21; 
-    g_Console.writeToBuffer(c, "ACHIEVEMENTS & OPTIONS"); 
+    g_Console.writeToBuffer(c, "STATISTIC"); 
 
 	c.X = 48;
     c.Y = 23; 
@@ -2586,7 +2586,7 @@ int achievement()
 {     
     cls();
      std:: string line;
-  std::ifstream myfile ("achi.txt");
+  std::ifstream myfile ("stats.txt");
   if (myfile.is_open())
   {
     while ( getline (myfile,line) )
