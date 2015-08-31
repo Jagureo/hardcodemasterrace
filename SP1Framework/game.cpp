@@ -256,6 +256,24 @@ void init( void )
     g_sChar.m_bActive = true;
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");*/
+	// Set precision for floating point output
+    std::cout << std::fixed << std::setprecision(3);
+
+    SetConsoleTitle(L"The Great Kappa");
+
+    // Get console width and height
+    CONSOLE_SCREEN_BUFFER_INFO csbi; /* to get buffer info */     
+
+    /* get the number of character cells in the current buffer */ 
+    GetConsoleScreenBufferInfo( GetStdHandle( STD_OUTPUT_HANDLE ), &csbi );
+    consoleSize.X = csbi.srWindow.Right + 1;
+    consoleSize.Y = csbi.srWindow.Bottom + 1;
+
+    // set the character to be in the center of the screen.
+    charLocation.X = 1;
+    charLocation.Y = 2;
+
+	colour(colors[15]);
 }
 void render()
 {
