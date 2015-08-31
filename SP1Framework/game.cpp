@@ -38,7 +38,7 @@ EGAMESTATES g_eGameState = S_SPLASHSCREEN;
 double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger keypresses more than once
 
 // Console object
-Console g_Console(80, 25, "SP The Great Kappa");
+Console g_Console(79, 28, "SP The Great Kappa");
 
 //--------------------------------------------------------------
 // Purpose  : Initialisation function
@@ -165,8 +165,6 @@ bool collisiondetection(int x)
 		}
 	}
 }
-
-
 void update(double dt)
 {
 	
@@ -280,8 +278,6 @@ void updateStats()
 {
 
 }
-
-
 void getInput( void )
 {    
     g_abKeyPressed[K_UP]     = isKeyPressed(VK_UP);
@@ -318,6 +314,8 @@ void init( void )
 
 void render()
 {
+	g_Console.clearBuffer(0x1F);
+	COORD c ;
 	clearScreen();
 	switch(gamestate)
 	{
@@ -444,6 +442,8 @@ void render()
 			std::cout << "WOW";
 		}*/
 		gotoXY(0,1);
+		int xcoord = 0;
+		int ycoord = 1;
 		for (int i = 0; i < 16; ++i)
 		{
 			for(int j = 0; j < 48; ++j)
@@ -452,28 +452,52 @@ void render()
 				//gotoXY(j,i+1);
 				if(level1[i][j] == 0)
 				{
-					cout << static_cast<char>(219);
+					//cout << static_cast<char>(219);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(219));
+					g_Console.writeToBuffer(c, 'w');
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 1)
 				{
-					cout << ' ';
+					//cout << ' ';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, ' ');
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 2)
 				{
-					cout << static_cast<char>(1);
+					//cout << static_cast<char>(1);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(1));
+					g_Console.writeToBuffer(c, 'p');
+					xcoord++;
 					continue;
 				}
 				else if((level1[i][j] == 3)||(level1[i][j] == 4)||(level1[i][j] == 6)||(level1[i][j] == 7))
 				{
-					cout << static_cast<char>(2);
+					//cout << static_cast<char>(2);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(2));
+					g_Console.writeToBuffer(c, 'e');
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 5)
 				{
 					colour(colors[13]);
-					cout << static_cast<char>(15);
+					//cout << static_cast<char>(15);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(15));
+					g_Console.writeToBuffer(c, 'l');
+					xcoord++;
 					colour(colors[12]);
 					continue;
 				}
@@ -482,65 +506,109 @@ void render()
 					colour(colors[16]);
 					if(level1[i][j] == 15)
 					{
-						cout << '^';
+						//cout << '^';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, '^');
 					}
 					else if(level1[i][j] == 16)
 					{
-						cout << 'V';
+						//cout << 'V';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, 'V');
 					}
 					else if(level1[i][j] == 17)
 					{
-						cout << '>';
+						//cout << '>';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, '>');
 					}
 					else if(level1[i][j] == 18)
 					{
-						cout << '<';
+						//cout << '<';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, '<');
 					}
 					colour(colors[12]);
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 19)
 				{
-					cout << '^';
+					//cout << '^';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '^');
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 20)
 				{
-					cout << 'V';
+					//cout << 'V';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, 'V');
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 23)
 				{
-					cout << '>';
+					//cout << '>';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '>');
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 22)
 				{
-					cout << '<';
+					//cout << '<';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '<');
+					xcoord++;
 					continue;
 				}
 				else if(level1[i][j] == 21)
 				{
 					colour(colors[16]);
-					cout << '|';
+					//cout << '|';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '|');
+					xcoord++;
 					colour(colors[12]);
 					continue;
 				}
 				else if(level1[i][j] == 25)
 				{
 					colour(colors[16]);
-					cout << '-';
+					//cout << '-';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '-');
+					xcoord++;
 					colour(colors[12]);
 					continue;
 				}
 				else if(level1[i][j] == 69)
 				{
-					cout << 'x';
+					//cout << 'x';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, 'x');
+					xcoord++;
 					continue;
 				}
 			}
-			cout << '\n';
+			//cout << '\n';
+			xcoord = 0;
+			ycoord++;
 		}
+		g_Console.flushBufferToConsole();	
 		if(level1[charLocation.Y-1][charLocation.X] == 69)
 			{
 				resetlevel();
@@ -646,13 +714,10 @@ void render()
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
 	*/
 }
-
-
 void renderMainMenu()
 {
 
 }
-
 void renderLevelSelect()
 {
 
@@ -661,10 +726,10 @@ void renderChallenges()
 {
 
 }			
-void renderStats(){
+void renderStats()
+{
 
 }
-
 void splashScreenWait()    // waits for time to pass in splash screen
 {
    // if (g_dElapsedTime > 3.0) // wait for 3 seconds to switch to game mode, else do nothing
@@ -794,7 +859,7 @@ void errorreport()
 	c.X = 0;
 	c.Y = 0;
     g_Console.writeToBuffer(c, " _ Error loading level. Thanks, Obama.   ");
-
+	g_Console.flushBufferToConsole();
 }
 int newmainmenu()
 {
@@ -1855,19 +1920,24 @@ void resetlevel()
 }
 int levelselect()
 {
-	g_Console.clearBuffer(0x1F);
+	g_Console.clearBuffer(0x0F);
 	COORD c ;
 	colour(0x0F);
     cls();
-	gotoXY(0,0);
+	gotoXY(2,0);
 	colour(colors[15]);
 	std:: string line;
   std::ifstream myfile ("levelselect.txt");
+  int ycoord = 0;
   if (myfile.is_open())
   {
     while ( getline (myfile,line) )
     {
-      cout << line << '\n';
+		c.X = 0;
+		c.Y = ycoord;
+        //cout << line << '\n';
+		g_Console.writeToBuffer(c, line);
+		ycoord++;
     }
     myfile.close();
   }
@@ -1881,7 +1951,6 @@ int levelselect()
 	c.X = 4;
 	c.Y = 12;
     g_Console.writeToBuffer(c, "Level 2");
-
 
 	c.X = 4;
 	c.Y = 16;
@@ -1992,65 +2061,85 @@ int levelselect()
 		if(g_abKeyPressed[K_DOWN] && levelnumber != 5 && levelnumber != 10 && levelnumber != 15 && levelnumber != 20 && levelnumber != 25)
 		{
 			levelnumber += 1;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << " ";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << " ";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, " ");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, " ");
 			leftarrowY += 4;
 			rightarrowY += 4;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << ">";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << "<";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, ">");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
+			g_Console.flushBufferToConsole();
 			system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_UP] && levelnumber != 1 && levelnumber != 6 && levelnumber != 11 && levelnumber != 16 && levelnumber != 21)
 		{
 			levelnumber -= 1;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << " ";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << " ";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, " ");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, " ");
 			leftarrowY -= 4;
 			rightarrowY -= 4;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << ">";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << "<";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, ">");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
+			g_Console.flushBufferToConsole();
 			system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_LEFT] && levelnumber > 5)
 		{
 			levelnumber -= 5;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << " ";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << " ";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, " ");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, " ");
 			leftarrowX -= 20;
 			rightarrowX -= 21;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << ">";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << "<";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, ">");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
+			g_Console.flushBufferToConsole();
 			system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_RIGHT] && levelnumber < 16)
 		{
 			levelnumber += 5;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << " ";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << " ";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, " ");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, " ");
 			leftarrowX += 20;
 			rightarrowX += 21;
-			gotoXY(leftarrowX,leftarrowY);
-			cout << ">";
-			gotoXY(rightarrowX,rightarrowY);
-			cout << "<";
+			c.X = leftarrowX;
+			c.Y = leftarrowY;
+			g_Console.writeToBuffer(c, ">");
+			c.X = rightarrowX;
+			c.Y = rightarrowY;
+			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
+			g_Console.flushBufferToConsole();
 			system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_RETURN])
@@ -2060,26 +2149,30 @@ int levelselect()
 		}
 		else if(g_abKeyPressed[K_ESCAPE])
 		{
-			cout << "hello my friends";
+			cout << "hello my friends";	
 			return 68;
 		}
 	}
 }
 int menu()  
-{   
+{   g_Console.clearBuffer(0x0F);
+	COORD c ;
     cls();
     int count = 0 ;
 
           std::  string line;
   std::ifstream myfile ("TGK.txt");
- 
+  int ycoord = 0;
   if (myfile.is_open())
   {
 	  
     while ( getline (myfile,line) )
     {
-
-cout  << line << '\n';
+		c.X = 0;
+		c.Y = ycoord;
+//cout  << line << '\n';
+		 g_Console.writeToBuffer(c, line);
+		 ycoord++;
     }
     myfile.close();
   }
@@ -2110,17 +2203,21 @@ cout  << line << '\n';
 	*/
 	std:: string keepo;
   std::ifstream anotherfile ("kapp.txt");
+  ycoord = 14;
   if (anotherfile.is_open())
   {
     while ( getline (anotherfile,keepo) )
     {
-      cout << keepo << '\n';
+		c.X = 0;
+		c.Y = ycoord;
+		 g_Console.writeToBuffer(c, keepo);
+		 ycoord++;
+      //cout << keepo << '\n';
     }
     anotherfile.close();
   }
 
   else cout << "Unable to open file"; 
-    COORD c;
 
 
 	colour(colors[15]);
@@ -2151,7 +2248,7 @@ cout  << line << '\n';
     c.Y = 23; 
 	g_Console.writeToBuffer(c, "EXITERINO"); 
    
-	c.X = 48;
+	c.X = 45;
     c.Y = 17;
     g_Console.writeToBuffer(c, ">"); 
     g_Console.flushBufferToConsole();/////
@@ -2174,6 +2271,7 @@ cout  << line << '\n';
                 count = 1 ;       
 				frequency -= 300;
 			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
                 system("pause > nul");
             }
             else if ( count == 1 )   
@@ -2190,6 +2288,7 @@ cout  << line << '\n';
                 count = 2 ;   
 				frequency -= 300;
 			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
                 system("pause > nul");
             }
             else if ( count == 2 ) 
@@ -2205,6 +2304,7 @@ cout  << line << '\n';
                 count = 3 ;    
 				frequency -= 300;
 			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
                 system("pause > nul");
             }
 			
@@ -2224,6 +2324,7 @@ cout  << line << '\n';
                 count = 0 ;   
 				frequency += 300;
 			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
                 system("pause > nul");
             }
             else if ( count == 2 ) 
@@ -2239,6 +2340,7 @@ cout  << line << '\n';
                 count = 1 ;    
 				frequency += 300;
 			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
                 system("pause > nul");
             }
             else if ( count == 3 )   
@@ -2254,6 +2356,7 @@ cout  << line << '\n';
                 count = 2 ;    
 				frequency += 300;
 			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
                 system("pause > nul");
             }
         }     
@@ -2279,53 +2382,62 @@ cout  << line << '\n';
 
 				c.X = 30;
 				c.Y = 10;
-                g_Console.writeToBuffer(c, "Are you SURE?");                   
+                g_Console.writeToBuffer(c, "Are you SURE?");
+				g_Console.flushBufferToConsole();
                 Sleep(500);
 
 
 				c.X = 50;
 				c.Y = 6;
-                g_Console.writeToBuffer(c, "SRSLY");           
+                g_Console.writeToBuffer(c, "SRSLY");
+				g_Console.flushBufferToConsole();
                 Sleep(400);
 
 
 				c.X = 13;
 				c.Y = 27;
-                g_Console.writeToBuffer(c, "REALLY?");    
+                g_Console.writeToBuffer(c, "REALLY?");
+				g_Console.flushBufferToConsole();
 				Sleep(300);
 
 
 
 				c.X = 43;
 				c.Y = 21;
-                g_Console.writeToBuffer(c, "BUT WHY");                 
+                g_Console.writeToBuffer(c, "BUT WHY");
+				g_Console.flushBufferToConsole();
                 Sleep(200);
 
 
 				c.X = 3;
 				c.Y = 16;
-                g_Console.writeToBuffer(c, "I THOUGHT YOU LOVED ME");    
+                g_Console.writeToBuffer(c, "I THOUGHT YOU LOVED ME");
+				g_Console.flushBufferToConsole();
                 Sleep(200);       
 
 				c.X = 70;
 				c.Y = 23;
-                g_Console.writeToBuffer(c, ":-(");    
+                g_Console.writeToBuffer(c, ":-("); 
+				g_Console.flushBufferToConsole();
                 Sleep(200); 
 
 
 				c.X = 17;
 				c.Y = 5;
-                g_Console.writeToBuffer(c, "GET BACK HERE");    
+                g_Console.writeToBuffer(c, "GET BACK HERE");
+				g_Console.flushBufferToConsole();
                 Sleep(200);   
 
 				c.X = 39;
 				c.Y = 14;
                 g_Console.writeToBuffer(c, "DONT PRESS ENTER");
+				g_Console.flushBufferToConsole();
                 Sleep(200);      
 
 				c.X = 39;
 				c.Y = 17;
                 g_Console.writeToBuffer(c, "NOOOOOOOOOO");
+				g_Console.flushBufferToConsole();
                 
 				gotoXY(0,0);
                 return 69;
@@ -2336,65 +2448,94 @@ cout  << line << '\n';
 }
 int challenge() 
 {
+	g_Console.clearBuffer(0x0F);
+	COORD c ;
     cls();     
 	std:: string line;
   std::ifstream myfile ("chall.txt");
+  int ycoord = 0;
   if (myfile.is_open())
   {
     while ( getline (myfile,line) )
     {
-      cout << line << '\n';
+		c.X = 0;
+		c.Y = ycoord;
+      //cout << line << '\n';
+		g_Console.writeToBuffer(c, line);
+		ycoord++;
     }
     myfile.close();
   }
 
   else cout << "Unable to open file"; 
 
-    gotoXY(4,10);   
-    cout << "Level 1" ;     
-    gotoXY(4,14); 
-    cout << "Level 2" ;     
-    gotoXY(4,18);
-    cout << "Level 3" ;  
-    gotoXY(4,22);
-    cout << "Level 4" ;   
-    gotoXY(4,26);   
-    cout << "Level 5" ;       
-    gotoXY(24,10);   
-    cout << "Level 6" ;  
-    gotoXY(24,14);
-    cout << "Level 7" ;   
-    gotoXY(24,18);    
-    cout << "Level 8" ;  
-    gotoXY(24,22);
-    cout << "Level 9" ;   
-    gotoXY(24,26);
-    cout << "Level 10" ;     
-    gotoXY(44,10);
-    cout << "Level 11" ;   
-    gotoXY(44,14);
-    cout << "Level 12" ; 
-    gotoXY(44,18);   
-    cout << "Level 13" ;   
-    gotoXY(44,22);
-    cout << "Level 14" ;   
-    gotoXY(44,26);
-    cout << "Level 15" ;    
-    gotoXY(64,10);
-    cout << "Level 16" ;   
-    gotoXY(64,14);
-    cout << "Level 17" ; 
-    gotoXY(64,18);   
-    cout << "Level 18" ;   
-    gotoXY(64,22);
-    cout << "Level 19" ;   
-    gotoXY(64,26);
-    cout << "Level 20" ; 
+    c.X = 4;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 1");
+	c.X = 4;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 2");
+	c.X = 4;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 3");
+	c.X = 4;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 4");
+	c.X = 4;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 5");
+	c.X = 24;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 6");
+	c.X = 24;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 7");
+	c.X = 24;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 8");
+	c.X = 24;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 9");
+	c.X = 24;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 10");
+	c.X = 44;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 11");
+	c.X = 44;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 12");
+	c.X = 44;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 13");
+	c.X = 44;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 14");
+	c.X = 44;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 15");
+	c.X = 64;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 16");
+	c.X = 64;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 17");
+	c.X = 64;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 18");
+	c.X = 64;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 19");
+	c.X = 64;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 20");
 
-    gotoXY(2,10);    
-    cout << ">" ;    
+	c.X = 2;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, ">"); 
+	g_Console.flushBufferToConsole();
     int xcoord = 2 ;   
-    int ycoord = 10 ;  
+    ycoord = 10 ;  
     while ( true )  
     {
         getInput();  
@@ -2466,5 +2607,3 @@ int achievement()
         } 
     }
 }
-
-

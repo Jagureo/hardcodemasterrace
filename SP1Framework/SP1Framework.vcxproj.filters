@@ -58,5 +58,26 @@
     <None Include="winlose.txt">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="youlose.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="youwin.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="achi.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="chall.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="kapp.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="levelselect.txt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TGK.txt">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

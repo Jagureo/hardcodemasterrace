@@ -88,8 +88,15 @@
     <ClInclude Include="splash.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="achi.txt" />
+    <None Include="chall.txt" />
+    <None Include="kapp.txt" />
     <None Include="levelmap.txt" />
+    <None Include="levelselect.txt" />
+    <None Include="TGK.txt" />
     <None Include="winlose.txt" />
+    <None Include="youlose.txt" />
+    <None Include="youwin.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
