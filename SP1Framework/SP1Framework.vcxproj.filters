@@ -64,6 +64,9 @@
     <None Include="youwin.txt">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="achi.txt">
+      <Filter>Resource Files</Filter>
+    </None>
     <None Include="chall.txt">
       <Filter>Resource Files</Filter>
     </None>
@@ -74,9 +77,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="TGK.txt">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="stats.txt">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

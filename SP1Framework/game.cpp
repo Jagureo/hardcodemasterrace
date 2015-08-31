@@ -40,59 +40,6 @@ double  g_dBounceTime; // this is to prevent key bouncing, so we won't trigger k
 // Console object
 Console g_Console(79, 28, "SP The Great Kappa");
 
-//--------------------------------------------------------------
-// Purpose  : Initialisation function
-//            Initialize variables, allocate memory, load data from file, etc. 
-//            This is called once before entering into your main loop
-// Input    : void
-// Output   : void
-//--------------------------------------------------------------
-
-
-//--------------------------------------------------------------
-// Purpose  : Reset before exiting the program
-//            Do your clean up of memory here
-//            This is called once just before the game exits
-// Input    : Void
-// Output   : void
-//--------------------------------------------------------------
-
-//--------------------------------------------------------------
-// Purpose  : Getting all the key press states
-//            This function checks if any key had been pressed since the last time we checked
-//            If a key is pressed, the value for that particular key will be true
-//
-//            Add more keys to the enum in game.h if you need to detect more keys
-//            To get other VK key defines, right click on the VK define (e.g. VK_UP) and choose "Go To Definition" 
-//            For Alphanumeric keys, the values are their ascii values (uppercase).
-// Input    : Void
-// Output   : void
-//--------------------------------------------------------------
-
-//--------------------------------------------------------------
-// Purpose  : Update function
-//            This is the update function
-//            double dt - This is the amount of time in seconds since the previous call was made
-//
-//            Game logic should be done here.
-//            Such as collision checks, determining the position of your game characters, status updates, etc
-//            If there are any calls to write to the console here, then you are doing it wrong.
-//
-//            If your game has multiple states, you should determine the current state, and call the relevant function here.
-//
-// Input    : dt = deltatime
-// Output   : void
-//--------------------------------------------------------------
-//--------------------------------------------------------------
-// Purpose  : Render function is to update the console screen
-//            At this point, you should know exactly what to draw onto the screen.
-//            Just draw it!
-//            To get an idea of the values for colours, look at console.h and the URL listed there
-// Input    : void
-// Output   : void
-//--------------------------------------------------------------
-
-
 const WORD colors[] = {
         0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
         0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
@@ -164,6 +111,7 @@ bool collisiondetection(int x)
 			return false;
 		}
 	}
+	return true;
 }
 void update(double dt)
 {
@@ -253,7 +201,6 @@ void update(double dt)
     }*/
 	
 }
-
 void updateSplashScreen()
 {
 
@@ -310,13 +257,11 @@ void init( void )
     // sets the width, height and the font name to use in the console
     g_Console.setConsoleFont(0, 16, L"Consolas");*/
 }
-
-
 void render()
 {
-	g_Console.clearBuffer(0x1F);
+	//g_Console.clearBuffer(0x1F);
 	COORD c ;
-	clearScreen();
+	//clearScreen();
 	switch(gamestate)
 	{
 		// main menu
@@ -375,7 +320,7 @@ void render()
 			}
 			charLocation.X = 1;
 			charLocation.Y = 2;
-			render();
+			//render();
 		}
 		else if(x == 2)
 		{
@@ -403,7 +348,7 @@ void render()
 			}
 			charLocation.X = 1;
 			charLocation.Y = 2;
-			render();
+			//render();
 		}
 		else
 		{
@@ -424,8 +369,8 @@ void render()
 
 		// clear previous screen
 		colour(0x0F);
-		cls();
-
+		//cls();
+		//g_Console.clearBuffer(0x0F);
 		//render the game
 
 		//render test screen code (not efficient at all)
@@ -456,7 +401,7 @@ void render()
 					c.X = xcoord;
 					c.Y = ycoord;
 					//g_Console.writeToBuffer(c, static_cast<char>(219));
-					g_Console.writeToBuffer(c, 'w');
+					g_Console.writeToBuffer(c, static_cast<char>(219));
 					xcoord++;
 					continue;
 				}
@@ -475,7 +420,7 @@ void render()
 					c.X = xcoord;
 					c.Y = ycoord;
 					//g_Console.writeToBuffer(c, static_cast<char>(1));
-					g_Console.writeToBuffer(c, 'p');
+					g_Console.writeToBuffer(c, static_cast<char>(1));
 					xcoord++;
 					continue;
 				}
@@ -485,7 +430,7 @@ void render()
 					c.X = xcoord;
 					c.Y = ycoord;
 					//g_Console.writeToBuffer(c, static_cast<char>(2));
-					g_Console.writeToBuffer(c, 'e');
+					g_Console.writeToBuffer(c, static_cast<char>(2));
 					xcoord++;
 					continue;
 				}
@@ -496,7 +441,7 @@ void render()
 					c.X = xcoord;
 					c.Y = ycoord;
 					//g_Console.writeToBuffer(c, static_cast<char>(15));
-					g_Console.writeToBuffer(c, 'l');
+					g_Console.writeToBuffer(c, static_cast<char>(15), 0x0E);
 					xcoord++;
 					colour(colors[12]);
 					continue;
@@ -608,7 +553,7 @@ void render()
 			xcoord = 0;
 			ycoord++;
 		}
-		g_Console.flushBufferToConsole();	
+		g_Console.flushBufferToConsole();
 		if(level1[charLocation.Y-1][charLocation.X] == 69)
 			{
 				resetlevel();
@@ -2145,6 +2090,7 @@ int levelselect()
 		else if(g_abKeyPressed[K_RETURN])
 		{
 			cout << "seriously? no";
+			g_Console.clearBuffer(0x0F);
 			return levelnumber;
 		}
 		else if(g_abKeyPressed[K_ESCAPE])
@@ -2171,7 +2117,7 @@ int menu()
 		c.X = 0;
 		c.Y = ycoord;
 //cout  << line << '\n';
-		 g_Console.writeToBuffer(c, line);
+		 g_Console.writeToBuffer(c, line, 0x0A);
 		 ycoord++;
     }
     myfile.close();
@@ -2203,7 +2149,7 @@ int menu()
 	*/
 	std:: string keepo;
   std::ifstream anotherfile ("kapp.txt");
-  ycoord = 14;
+  ycoord = 15;
   if (anotherfile.is_open())
   {
     while ( getline (anotherfile,keepo) )
@@ -2242,7 +2188,7 @@ int menu()
       
 	c.X = 48;
     c.Y = 21; 
-    g_Console.writeToBuffer(c, "STATISTIC"); 
+    g_Console.writeToBuffer(c, "ACHIEVEMENTS & OPTIONS"); 
 
 	c.X = 48;
     c.Y = 23; 
@@ -2586,7 +2532,7 @@ int achievement()
 {     
     cls();
      std:: string line;
-  std::ifstream myfile ("stats.txt");
+  std::ifstream myfile ("achi.txt");
   if (myfile.is_open())
   {
     while ( getline (myfile,line) )
