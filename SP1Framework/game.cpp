@@ -571,6 +571,9 @@ void render()
 			xcoord = 0;
 			ycoord++;
 		}
+		c.X = charLocation.X;
+		c.Y = charLocation.Y;
+		g_Console.writeToBuffer(c, (char)1, 0x0C);
 		g_Console.flushBufferToConsole();
 		if(level1[charLocation.Y-1][charLocation.X] == 69)
 			{
@@ -579,6 +582,9 @@ void render()
 				keyinputaa = true;
 				render();
 				gotoXY (0, 17);
+				c.X = 0;
+				ycoord = 17;
+				c.Y = ycoord;
 				colour(colorskappa[14]);
 				//cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
 				//cout<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"  "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
@@ -603,7 +609,9 @@ void render()
   {
     while ( getline (myfile,wining) )
     {
-      cout << wining << '\n';
+	  g_Console.writeToBuffer(c, wining);
+	  ycoord++;
+      //cout << wining << '\n';
     }
     myfile.close();
   }
@@ -619,6 +627,9 @@ void render()
 				keyinputaa = true;
 				render();
 				gotoXY (0, 19);
+				c.X = 0;
+				ycoord = 19;
+				c.Y = ycoord;
 				colour(colorskappa[14]);
 				//cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"      "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
 				//cout<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"     "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
@@ -642,7 +653,9 @@ void render()
   {
     while ( getline (myfile,losing) )
     {
-      cout << losing << '\n';
+	  g_Console.writeToBuffer(c, losing);
+	  ycoord++;
+      //cout << losing << '\n';
     }
     myfile.close();
   }
@@ -661,9 +674,9 @@ void render()
 		std::cout << g_dElapsedTime << "secs" << std::endl;
 
 		// render character
-		gotoXY(charLocation);
-		colour(0x0C);
-		std::cout << (char)1;
+		//gotoXY(charLocation);
+		//colour(0x0C);
+		//std::cout << (char)1;
 	}
     /*clearScreen();      // clears the current screen and draw from scratch 
     switch (g_eGameState)
