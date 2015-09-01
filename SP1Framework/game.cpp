@@ -683,6 +683,7 @@ void render()
     renderFramerate();  // renders debug information, frame rate, elapsed time, etc
     renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
 	*/
+	renderFramerate();
 }
 void renderMainMenu()
 {
@@ -806,7 +807,7 @@ void renderCharacter()
 }
 void renderFramerate()
 {
-	/*
+	
     COORD c;
     // displays the framerate
     std::ostringstream ss;
@@ -822,7 +823,7 @@ void renderFramerate()
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
-	*/
+	
 }
 void renderToScreen()
 {
