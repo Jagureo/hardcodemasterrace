@@ -57,13 +57,176 @@ void renderMap()
  
 
     COORD c;
-    for (int i = 0; i < 12; ++i)
-    {
-        c.X = 5 * i;
-        c.Y = i + 1;
-        colour(colors[i]);
-        g_Console.writeToBuffer(c, " °±²Û", colors[i]);
-    }
+    int xcoord = 0;
+		int ycoord = 1;
+		for (int i = 0; i < 16; ++i)
+		{
+			for(int j = 0; j < 48; ++j)
+			{
+				//colour(colors[12]);
+				//gotoXY(j,i+1);
+				if(level1[i][j] == 0)
+				{
+					//cout << static_cast<char>(219);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(219));
+					g_Console.writeToBuffer(c, static_cast<char>(219));
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 1)
+				{
+					//cout << ' ';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, ' ');
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 2)
+				{
+					//cout << static_cast<char>(1);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(1));
+					g_Console.writeToBuffer(c, static_cast<char>(1));
+					xcoord++;
+					continue;
+				}
+				else if((level1[i][j] == 3)||(level1[i][j] == 4)||(level1[i][j] == 6)||(level1[i][j] == 7))
+				{
+					//cout << static_cast<char>(2);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(2));
+					g_Console.writeToBuffer(c, static_cast<char>(2));
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 5)
+				{
+					colour(colors[13]);
+					//cout << static_cast<char>(15);
+					c.X = xcoord;
+					c.Y = ycoord;
+					//g_Console.writeToBuffer(c, static_cast<char>(15));
+					g_Console.writeToBuffer(c, static_cast<char>(15), 0x0E);
+					xcoord++;
+					colour(colors[12]);
+					continue;
+				}
+				else if((level1[i][j] == 15)||(level1[i][j] == 16)||(level1[i][j] == 17)||(level1[i][j] == 18))
+				{
+					colour(colors[16]);
+					if(level1[i][j] == 15)
+					{
+						//cout << '^';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, '^');
+					}
+					else if(level1[i][j] == 16)
+					{
+						//cout << 'V';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, 'V');
+					}
+					else if(level1[i][j] == 17)
+					{
+						//cout << '>';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, '>');
+					}
+					else if(level1[i][j] == 18)
+					{
+						//cout << '<';
+						c.X = xcoord;
+						c.Y = ycoord;
+						g_Console.writeToBuffer(c, '<');
+					}
+					colour(colors[12]);
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 19)
+				{
+					//cout << '^';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '^');
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 20)
+				{
+					//cout << 'V';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, 'V');
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 23)
+				{
+					//cout << '>';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '>');
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 22)
+				{
+					//cout << '<';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '<');
+					xcoord++;
+					continue;
+				}
+				else if(level1[i][j] == 21)
+				{
+					colour(colors[16]);
+					//cout << '|';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '|');
+					xcoord++;
+					colour(colors[12]);
+					continue;
+				}
+				else if(level1[i][j] == 25)
+				{
+					colour(colors[16]);
+					//cout << '-';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, '-');
+					xcoord++;
+					colour(colors[12]);
+					continue;
+				}
+				else if(level1[i][j] == 69)
+				{
+					//cout << 'x';
+					c.X = xcoord;
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, 'x');
+					xcoord++;
+					continue;
+				}
+			}
+			//cout << '\n';
+			xcoord = 0;
+			ycoord++;
+		}
+		c.X = charLocation.X;
+		c.Y = charLocation.Y;
+		g_Console.writeToBuffer(c, (char)1, 0x0C);
+		g_Console.flushBufferToConsole();
 }
 bool collisiondetection(int x)
 {
@@ -381,7 +544,7 @@ void render()
 			return;
 		}
 		keyinputaa = false;
-
+		g_Console.clearBuffer(0x0F);
 		loadlevel();
 		loadlight();
 
@@ -405,176 +568,7 @@ void render()
 			std::cout << "WOW";
 		}*/
 		gotoXY(0,1);
-		int xcoord = 0;
-		int ycoord = 1;
-		for (int i = 0; i < 16; ++i)
-		{
-			for(int j = 0; j < 48; ++j)
-			{
-				//colour(colors[12]);
-				//gotoXY(j,i+1);
-				if(level1[i][j] == 0)
-				{
-					//cout << static_cast<char>(219);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(219));
-					g_Console.writeToBuffer(c, static_cast<char>(219));
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 1)
-				{
-					//cout << ' ';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, ' ');
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 2)
-				{
-					//cout << static_cast<char>(1);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(1));
-					g_Console.writeToBuffer(c, static_cast<char>(1));
-					xcoord++;
-					continue;
-				}
-				else if((level1[i][j] == 3)||(level1[i][j] == 4)||(level1[i][j] == 6)||(level1[i][j] == 7))
-				{
-					//cout << static_cast<char>(2);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(2));
-					g_Console.writeToBuffer(c, static_cast<char>(2));
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 5)
-				{
-					colour(colors[13]);
-					//cout << static_cast<char>(15);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(15));
-					g_Console.writeToBuffer(c, static_cast<char>(15), 0x0E);
-					xcoord++;
-					colour(colors[12]);
-					continue;
-				}
-				else if((level1[i][j] == 15)||(level1[i][j] == 16)||(level1[i][j] == 17)||(level1[i][j] == 18))
-				{
-					colour(colors[16]);
-					if(level1[i][j] == 15)
-					{
-						//cout << '^';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, '^');
-					}
-					else if(level1[i][j] == 16)
-					{
-						//cout << 'V';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, 'V');
-					}
-					else if(level1[i][j] == 17)
-					{
-						//cout << '>';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, '>');
-					}
-					else if(level1[i][j] == 18)
-					{
-						//cout << '<';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, '<');
-					}
-					colour(colors[12]);
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 19)
-				{
-					//cout << '^';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '^');
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 20)
-				{
-					//cout << 'V';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, 'V');
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 23)
-				{
-					//cout << '>';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '>');
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 22)
-				{
-					//cout << '<';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '<');
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 21)
-				{
-					colour(colors[16]);
-					//cout << '|';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '|');
-					xcoord++;
-					colour(colors[12]);
-					continue;
-				}
-				else if(level1[i][j] == 25)
-				{
-					colour(colors[16]);
-					//cout << '-';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '-');
-					xcoord++;
-					colour(colors[12]);
-					continue;
-				}
-				else if(level1[i][j] == 69)
-				{
-					//cout << 'x';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, 'x');
-					xcoord++;
-					continue;
-				}
-			}
-			//cout << '\n';
-			xcoord = 0;
-			ycoord++;
-		}
-		c.X = charLocation.X;
-		c.Y = charLocation.Y;
-		g_Console.writeToBuffer(c, (char)1, 0x0C);
-		g_Console.flushBufferToConsole();
+		renderMap();
 		if(level1[charLocation.Y-1][charLocation.X] == 69)
 			{
 				resetlevel();
@@ -583,7 +577,7 @@ void render()
 				render();
 				gotoXY (0, 17);
 				c.X = 0;
-				ycoord = 17;
+				int ycoord = 17;
 				c.Y = ycoord;
 				colour(colorskappa[14]);
 				//cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
@@ -609,6 +603,7 @@ void render()
   {
     while ( getline (myfile,wining) )
     {
+	  c.Y = ycoord;
 	  g_Console.writeToBuffer(c, wining);
 	  ycoord++;
       //cout << wining << '\n';
@@ -628,7 +623,7 @@ void render()
 				render();
 				gotoXY (0, 19);
 				c.X = 0;
-				ycoord = 19;
+				int ycoord = 19;
 				c.Y = ycoord;
 				colour(colorskappa[14]);
 				//cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"      "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
@@ -653,6 +648,7 @@ void render()
   {
     while ( getline (myfile,losing) )
     {
+	  c.Y = ycoord;
 	  g_Console.writeToBuffer(c, losing);
 	  ycoord++;
       //cout << losing << '\n';
@@ -719,11 +715,12 @@ void gameplay()            // gameplay logic
 }
 void moveCharacter()
 {
+	  //if (g_dBounceTime > g_dElapsedTime)
+       // return;
+
 	/*
     bool bSomethingHappened = false;
-    if (g_dBounceTime > g_dElapsedTime)
-        return;
-
+  
     // Updating the location of the character based on the key press
     // providing a beep sound whenver we shift the character
     if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
