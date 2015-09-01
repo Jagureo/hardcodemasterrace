@@ -223,9 +223,7 @@ void renderMap()
 			xcoord = 0;
 			ycoord++;
 		}
-		c.X = charLocation.X;
-		c.Y = charLocation.Y;
-		g_Console.writeToBuffer(c, (char)1, 0x0C);
+		renderCharacter();
 		g_Console.flushBufferToConsole();
 }
 bool collisiondetection(int x)
@@ -800,6 +798,11 @@ void renderCharacter()
         charColor = 0x0A;
     }
     g_Console.writeToBuffer(g_sChar.m_cLocation, (char)1, charColor);*/
+	COORD c;
+	c.X = charLocation.X;
+	c.Y = charLocation.Y;
+    g_Console.writeToBuffer(c, (char)1, 0x0C);
+	g_Console.flushBufferToConsole();
 }
 void renderFramerate()
 {
