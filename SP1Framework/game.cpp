@@ -18,7 +18,7 @@ bool levelfix = true;
 bool keyinputaa = true;	
 double  g_dElapsedTime;
 double  g_dDeltaTime;
-int levelnumber;
+int levelnumber = 1;
 int y;		
 int rainbowhere = 9;
 int gamestate = 1;
@@ -27,6 +27,8 @@ int levelselected = 0;
 int challengeselected = 0;
 int achievementselected = 0;
 int count2 = 0;
+int levelarrowX = 2;
+int levelarrowY = 8;
 int challengearrowX = 2;
 int challengearrowY = 10;
 //int direction = 0;
@@ -315,7 +317,7 @@ void update(double dt)
 	if(gamestate == 2)
 	{
 	  // Updating the location of the character based on the key press
-		if (g_abKeyPressed[K_UP])
+		if (g_abKeyPressed[K_UP] && g_dBounceTime < g_dElapsedTime)
 		{
 			bool nocollide = collisiondetection(1);
 			if(nocollide)
@@ -323,9 +325,10 @@ void update(double dt)
 				Beep(1440, 60);
 				charLocation.Y--; 
 				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
 			}
 		}
-		else if (g_abKeyPressed[K_LEFT])
+		else if (g_abKeyPressed[K_LEFT] && g_dBounceTime < g_dElapsedTime)
 		{
 			bool nocollide = collisiondetection(2);
 			if(nocollide)
@@ -333,9 +336,10 @@ void update(double dt)
 				Beep(1440, 60);
 				charLocation.X--; 
 				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
 			}
 		}
-		else if (g_abKeyPressed[K_DOWN])
+		else if (g_abKeyPressed[K_DOWN] && g_dBounceTime < g_dElapsedTime)
 		{
 			bool nocollide = collisiondetection(3);
 			if(nocollide)
@@ -343,9 +347,10 @@ void update(double dt)
 				Beep(1440, 60);
 				charLocation.Y++; 
 				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
 			}
 		}
-		else if (g_abKeyPressed[K_RIGHT])
+		else if (g_abKeyPressed[K_RIGHT] && g_dBounceTime < g_dElapsedTime)
 		{
 			bool nocollide = collisiondetection(4);
 			if(nocollide)
@@ -353,13 +358,17 @@ void update(double dt)
 				Beep(1440, 60);
 				charLocation.X++; 
 				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
 			}
 		}
 
-    // quits the game i	f player hits the escape key
-    if (g_abKeyPressed[K_ESCAPE])
-		gamestate = 1;
-        //g_quitGame = true;
+		// quits the game i	f player hits the escape key
+		if (g_abKeyPressed[K_ESCAPE])
+		{
+			gamestate = 1;
+			g_dBounceTime = g_dElapsedTime + 0.125;
+			//g_quitGame = true;
+		}
 	}
 }
 void updateSplashScreen()
@@ -405,6 +414,7 @@ void shutdown( void )
 }
 void init( void )
 {
+	g_dBounceTime = 0.0;
    /* // Set precision for floating point output
     g_dElapsedTime = 0.0;
     g_dBounceTime = 0.0;
@@ -757,8 +767,14 @@ int newmainmenu()
 				ministate = 0;
 				return 0;
 			}
-			ministate = 0;
-			return levelselected;
+			else if(levelselected != 0 )
+			{
+				return levelselected;
+			}
+			else
+			{
+				return 0;
+			}
 		case 2:
 			challengeselected = challenge();
 			if(challengeselected == 4)
@@ -1940,121 +1956,93 @@ int levelselect()
 	c.Y = 24;
     g_Console.writeToBuffer(c, "Level 20");
 	
-	c.X = 2;
-	c.Y = 8;
+	c.X = levelarrowX;
+	c.Y = levelarrowY;
     g_Console.writeToBuffer(c, ">");
 
-	c.X = 13;
-	c.Y = 8;
-    g_Console.writeToBuffer(c, "<");
 	 g_Console.flushBufferToConsole();
 
 	gotoXY(2,0);
-	levelnumber = 1;
-	int leftarrowX = 2;
-	int leftarrowY = 8;
-	int rightarrowX = 13;
-	int rightarrowY = 8;
-	system("pause > nul");
-	while(true)
-	{
+	//levelnumber = 1;
+	int leftarrowX = levelarrowX;
+	int leftarrowY = levelarrowY;
+	//system("pause > nul");
 		getInput();
-		if(g_abKeyPressed[K_DOWN] && levelnumber != 5 && levelnumber != 10 && levelnumber != 15 && levelnumber != 20 && levelnumber != 25)
+		if(g_abKeyPressed[K_DOWN] && levelnumber != 5 && levelnumber != 10 && levelnumber != 15 && levelnumber != 20 && levelnumber != 25 && g_dBounceTime < g_dElapsedTime)
 		{
+			g_dBounceTime = g_dElapsedTime + 0.125;
 			levelnumber += 1;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, " ");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, " ");
 			leftarrowY += 4;
-			rightarrowY += 4;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, ">");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			system("pause > nul");
+			//system("pause > nul");
 		}
-		else if(g_abKeyPressed[K_UP] && levelnumber != 1 && levelnumber != 6 && levelnumber != 11 && levelnumber != 16 && levelnumber != 21)
+		else if(g_abKeyPressed[K_UP] && levelnumber != 1 && levelnumber != 6 && levelnumber != 11 && levelnumber != 16 && levelnumber != 21 && g_dBounceTime < g_dElapsedTime)
 		{
+			g_dBounceTime = g_dElapsedTime + 0.125;
 			levelnumber -= 1;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, " ");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, " ");
 			leftarrowY -= 4;
-			rightarrowY -= 4;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, ">");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			system("pause > nul");
+			//system("pause > nul");
 		}
-		else if(g_abKeyPressed[K_LEFT] && levelnumber > 5)
+		else if(g_abKeyPressed[K_LEFT] && levelnumber > 5 && g_dBounceTime < g_dElapsedTime)
 		{
+			g_dBounceTime = g_dElapsedTime + 0.125;
 			levelnumber -= 5;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, " ");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, " ");
 			leftarrowX -= 20;
-			rightarrowX -= 20;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, ">");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			system("pause > nul");
+			//system("pause > nul");
 		}
-		else if(g_abKeyPressed[K_RIGHT] && levelnumber < 16)
+		else if(g_abKeyPressed[K_RIGHT] && levelnumber < 16 && g_dBounceTime < g_dElapsedTime)
 		{
+			g_dBounceTime = g_dElapsedTime + 0.125;
 			levelnumber += 5;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, " ");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, " ");
 			leftarrowX += 20;
-			rightarrowX += 20;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, ">");
-			c.X = rightarrowX;
-			c.Y = rightarrowY;
-			g_Console.writeToBuffer(c, "<");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			system("pause > nul");
+			//system("pause > nul");
 		}
-		else if(g_abKeyPressed[K_RETURN])
+		else if(g_abKeyPressed[K_RETURN] && g_dBounceTime < g_dElapsedTime)
 		{
 			cout << "seriously? no";
 			g_Console.clearBuffer(0x0F);
 			return levelnumber;
 		}
-		else if(g_abKeyPressed[K_ESCAPE])
+		else if(g_abKeyPressed[K_ESCAPE] && g_dBounceTime < g_dElapsedTime)
 		{
 			cout << "hello my friends";	
+			g_dBounceTime = g_dElapsedTime + 0.125;
 			return 68;
 		}
-	}
+	levelarrowX = leftarrowX;
+	levelarrowY = leftarrowY;
+	return 0;
 }
 int menu()  
 {   g_Console.clearBuffer(0x0F);
@@ -2152,8 +2140,9 @@ int menu()
 	}
     g_Console.flushBufferToConsole();
 	int frequency = 2640;    
-    if ( g_abKeyPressed[K_DOWN] == 1 )    
+    if ( g_abKeyPressed[K_DOWN] == 1 && g_dBounceTime < g_dElapsedTime)    
     {
+		g_dBounceTime = g_dElapsedTime + 0.125;
         if ( count == 0 )   
         {	
 			c.X = 45;
@@ -2202,8 +2191,9 @@ int menu()
         }
 			
     }   
-    else if ( g_abKeyPressed[K_UP] == 1 )     
+    else if ( g_abKeyPressed[K_UP] == 1 && g_dBounceTime < g_dElapsedTime)     
     {
+		g_dBounceTime = g_dElapsedTime + 0.125;
         if ( count == 1 )  
         {
 			c.X = 45;
@@ -2252,6 +2242,7 @@ int menu()
     }     
     else if ( g_abKeyPressed[K_RETURN] == 1 )        
     {
+		g_dBounceTime = g_dElapsedTime + 0.125;
 		if ( count == 0 )  
         {
             return 1;  
@@ -2420,8 +2411,9 @@ int challenge()
     {
         return 4;  
     }
-    if ( ( g_abKeyPressed[K_RIGHT] == 1 ) && ( challengearrowX < 62 ) )    
+    if ( ( g_abKeyPressed[K_RIGHT] == 1 ) && ( challengearrowX < 62 ) && g_dBounceTime < g_dElapsedTime )    
     {
+		g_dBounceTime = g_dElapsedTime + 0.125;
 		c.X = challengearrowX;
 		c.Y = challengearrowY;
 		g_Console.writeToBuffer(c, " ");
@@ -2430,8 +2422,9 @@ int challenge()
 		c.Y = challengearrowY;
 		g_Console.writeToBuffer(c, ">");
     }    
-    if ( ( g_abKeyPressed[K_LEFT] == 1) && ( challengearrowX>5 ) )    
+    if ( ( g_abKeyPressed[K_LEFT] == 1) && ( challengearrowX>5 ) && g_dBounceTime < g_dElapsedTime )    
     {
+		g_dBounceTime = g_dElapsedTime + 0.125;
         c.X = challengearrowX;
 		c.Y = challengearrowY;
 		g_Console.writeToBuffer(c, " ");
@@ -2440,8 +2433,9 @@ int challenge()
 		c.Y = challengearrowY;
 		g_Console.writeToBuffer(c, ">");
     }    
-    if ( ( g_abKeyPressed[K_DOWN] == 1 ) && ( challengearrowY < 26 ) )  
+    if ( ( g_abKeyPressed[K_DOWN] == 1 ) && ( challengearrowY < 26 ) && g_dBounceTime < g_dElapsedTime )  
     {
+		g_dBounceTime = g_dElapsedTime + 0.125;
         c.X = challengearrowX;
 		c.Y = challengearrowY;
 		g_Console.writeToBuffer(c, " ");
@@ -2450,8 +2444,9 @@ int challenge()
 		c.Y = challengearrowY;
 		g_Console.writeToBuffer(c, ">");
     } 
-    if ( ( g_abKeyPressed[K_UP] == 1 ) && ( challengearrowY > 10 ) )  
+    if ( ( g_abKeyPressed[K_UP] == 1 ) && ( challengearrowY > 10 ) && g_dBounceTime < g_dElapsedTime )  
     {
+		g_dBounceTime = g_dElapsedTime + 0.125;
         c.X = challengearrowX;
 		c.Y = challengearrowY;
 		g_Console.writeToBuffer(c, " ");
