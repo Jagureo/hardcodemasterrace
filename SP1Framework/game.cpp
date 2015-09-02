@@ -31,12 +31,12 @@ int levelarrowX = 2;
 int levelarrowY = 8;
 int challengearrowX = 2;
 int challengearrowY = 10;
-//int direction = 0;
 int levelno = 1;
 int level1[16][48];
 int level1AI[16][48];
 void loadlevel();
 void loadlight();
+void moveCharacter();
 
 COORD charLocation;
 COORD consoleSize;
@@ -66,8 +66,6 @@ const WORD colorskappa[] =  {
 void renderMap()
 {
     // Set up sample colours, and output shadings
- 
-
     COORD c;
     int xcoord = 0;
 	int ycoord = 1;
@@ -75,14 +73,10 @@ void renderMap()
 	{
 		for(int j = 0; j < 48; ++j)
 		{
-			//colour(colors[12]);
-			//gotoXY(j,i+1);
 			if(level1[i][j] == 0)
 			{
-				//cout << static_cast<char>(219);
 				c.X = xcoord;
 				c.Y = ycoord;
-				//g_Console.writeToBuffer(c, static_cast<char>(219));
 				g_Console.writeToBuffer(c, static_cast<char>(219));
 				xcoord++;
 				continue;
@@ -98,20 +92,16 @@ void renderMap()
 			}
 			else if(level1[i][j] == 2)
 			{
-				//cout << static_cast<char>(1);
 				c.X = xcoord;
 				c.Y = ycoord;
-				//g_Console.writeToBuffer(c, static_cast<char>(1));
 				g_Console.writeToBuffer(c, static_cast<char>(1));
 				xcoord++;
 				continue;
 			}
 			else if((level1[i][j] == 3)||(level1[i][j] == 4)||(level1[i][j] == 6)||(level1[i][j] == 7))
 			{
-				//cout << static_cast<char>(2);
 				c.X = xcoord;
 				c.Y = ycoord;
-				//g_Console.writeToBuffer(c, static_cast<char>(2));
 				g_Console.writeToBuffer(c, static_cast<char>(2));
 				xcoord++;
 				continue;
@@ -119,10 +109,8 @@ void renderMap()
 			else if(level1[i][j] == 5)
 			{
 				colour(colors[13]);
-				//cout << static_cast<char>(15);
 				c.X = xcoord;
 				c.Y = ycoord;
-				//g_Console.writeToBuffer(c, static_cast<char>(15));
 				g_Console.writeToBuffer(c, static_cast<char>(15), 0x0E);
 				xcoord++;
 				colour(colors[12]);
@@ -133,31 +121,27 @@ void renderMap()
 				colour(colors[16]);
 				if(level1[i][j] == 15)
 				{
-					//cout << '^';
 					c.X = xcoord;
 					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '^');
+					g_Console.writeToBuffer(c, '^', 0x0C);
 				}
 				else if(level1[i][j] == 16)
 				{
-					//cout << 'V';
 					c.X = xcoord;
 					c.Y = ycoord;
-					g_Console.writeToBuffer(c, 'V');
+					g_Console.writeToBuffer(c, 'V', 0x0C);
 				}
 				else if(level1[i][j] == 17)
 				{
-				//cout << '>';
 					c.X = xcoord;
 					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '>');
+					g_Console.writeToBuffer(c, '>', 0x0C);
 				}
 				else if(level1[i][j] == 18)
 				{
-					//cout << '<';
 					c.X = xcoord;
 					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '<');
+					g_Console.writeToBuffer(c, '<', 0x0C);
 				}
 				colour(colors[12]);
 				xcoord++;
@@ -165,7 +149,6 @@ void renderMap()
 			}
 			else if(level1[i][j] == 19)
 			{
-				//cout << '^';
 				c.X = xcoord;
 				c.Y = ycoord;
 				g_Console.writeToBuffer(c, '^');
@@ -174,7 +157,6 @@ void renderMap()
 			}
 			else if(level1[i][j] == 20)
 			{
-				//cout << 'V';
 				c.X = xcoord;
 				c.Y = ycoord;
 				g_Console.writeToBuffer(c, 'V');
@@ -183,7 +165,6 @@ void renderMap()
 			}
 			else if(level1[i][j] == 23)
 			{
-				//cout << '>';
 				c.X = xcoord;
 				c.Y = ycoord;
 				g_Console.writeToBuffer(c, '>');
@@ -192,7 +173,6 @@ void renderMap()
 			}
 			else if(level1[i][j] == 22)
 			{
-				//cout << '<';
 				c.X = xcoord;
 				c.Y = ycoord;
 				g_Console.writeToBuffer(c, '<');
@@ -202,10 +182,9 @@ void renderMap()
 			else if(level1[i][j] == 21)
 			{
 				colour(colors[16]);
-				//cout << '|';
 				c.X = xcoord;
 				c.Y = ycoord;
-				g_Console.writeToBuffer(c, '|');
+				g_Console.writeToBuffer(c, '|', 0x0C);
 				xcoord++;
 				colour(colors[12]);
 				continue;
@@ -213,17 +192,15 @@ void renderMap()
 			else if(level1[i][j] == 25)
 			{
 				colour(colors[16]);
-				//cout << '-';
 				c.X = xcoord;
 				c.Y = ycoord;
-				g_Console.writeToBuffer(c, '-');
+				g_Console.writeToBuffer(c, '-', 0x0C);
 				xcoord++;
 				colour(colors[12]);
 				continue;
 			}
 			else if(level1[i][j] == 69)
 			{
-				//cout << 'x';
 				c.X = xcoord;
 				c.Y = ycoord;
 				g_Console.writeToBuffer(c, 'x');
@@ -231,7 +208,6 @@ void renderMap()
 				continue;
 			}
 		}
-		//cout << '\n';
 		xcoord = 0;
 		ycoord++;
 	}
@@ -316,51 +292,8 @@ void update(double dt)
 
 	if(gamestate == 2)
 	{
-	  // Updating the location of the character based on the key press
-		if (g_abKeyPressed[K_UP] && g_dBounceTime < g_dElapsedTime)
-		{
-			bool nocollide = collisiondetection(1);
-			if(nocollide)
-			{
-				Beep(1440, 60);
-				charLocation.Y--; 
-				keyinputaa = true;
-				g_dBounceTime = g_dElapsedTime + 0.125;
-			}
-		}
-		else if (g_abKeyPressed[K_LEFT] && g_dBounceTime < g_dElapsedTime)
-		{
-			bool nocollide = collisiondetection(2);
-			if(nocollide)
-			{
-				Beep(1440, 60);
-				charLocation.X--; 
-				keyinputaa = true;
-				g_dBounceTime = g_dElapsedTime + 0.125;
-			}
-		}
-		else if (g_abKeyPressed[K_DOWN] && g_dBounceTime < g_dElapsedTime)
-		{
-			bool nocollide = collisiondetection(3);
-			if(nocollide)
-			{
-				Beep(1440, 60);
-				charLocation.Y++; 
-				keyinputaa = true;
-				g_dBounceTime = g_dElapsedTime + 0.125;
-			}
-		}
-		else if (g_abKeyPressed[K_RIGHT] && g_dBounceTime < g_dElapsedTime)
-		{
-			bool nocollide = collisiondetection(4);
-			if(nocollide)
-			{
-				Beep(1440, 60);
-				charLocation.X++; 
-				keyinputaa = true;
-				g_dBounceTime = g_dElapsedTime + 0.125;
-			}
-		}
+		// Updating the location of the character based on the key press
+		moveCharacter();
 
 		// quits the game i	f player hits the escape key
 		if (g_abKeyPressed[K_ESCAPE])
@@ -415,19 +348,7 @@ void shutdown( void )
 void init( void )
 {
 	g_dBounceTime = 0.0;
-   /* // Set precision for floating point output
-    g_dElapsedTime = 0.0;
-    g_dBounceTime = 0.0;
 
-    // sets the initial state for the game
-    g_eGameState = S_SPLASHSCREEN;
-
-    g_sChar.m_cLocation.X = g_Console.getConsoleSize().X / 2;
-    g_sChar.m_cLocation.Y = g_Console.getConsoleSize().Y / 2;
-    g_sChar.m_bActive = true;
-    // sets the width, height and the font name to use in the console
-    g_Console.setConsoleFont(0, 16, L"Consolas");*/
-	// Set precision for floating point output
     std::cout << std::fixed << std::setprecision(3);
 
     SetConsoleTitle(L"The Great Kappa");
@@ -451,7 +372,7 @@ void render()
 	//g_Console.clearBuffer(0x1F);
 	COORD c ;
 	//clearScreen();
-	switch(gamestate)
+	/*switch(gamestate)
 	{
 		// main menu
 		case 1: renderSplashScreen();
@@ -470,7 +391,7 @@ void render()
 		case 6: renderStats();
 			break;
 		
-	}
+	}*/
 
 	renderToScreen();
 
@@ -555,51 +476,145 @@ void render()
 			colour(colorskappa[14]);
 			std ::string wining;
 			std::ifstream myfile ("youwin.txt");
-  if (myfile.is_open())
-  {
-    while ( getline (myfile,wining) )
-    {
-	  c.Y = ycoord;
-	  g_Console.writeToBuffer(c, wining);
-	  ycoord++;
-    }
-    myfile.close();
-  }
-
-  else cout << "Unable to open file"; 
-				
-			}
-			else if(level1[charLocation.Y-1][charLocation.X] != 1)
+			if (myfile.is_open())
 			{
-				resetlevel();
-				keyinputaa = true;
-				render();
-				gotoXY (0, 19);
-				c.X = 0;
-				int ycoord = 19;
-				c.Y = ycoord;
-				colour(colorskappa[14]);
-				std ::string losing;
-  std::ifstream myfile ("youlose.txt");
-  if (myfile.is_open())
-  {
-    while ( getline (myfile,losing) )
-    {
-	  c.Y = ycoord;
-	  g_Console.writeToBuffer(c, losing);
-	  ycoord++;
-    }
-    myfile.close();
-  }
-
-  else cout << "Unable to open file"; 		
+				while ( getline (myfile,wining) )
+				{
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, wining);
+					ycoord++;
+				}
+				myfile.close();
 			}
+
+			else cout << "Unable to open file"; 
+				
+		}
+		else if(level1[charLocation.Y-1][charLocation.X] != 1)
+		{
+			resetlevel();
+			keyinputaa = true;
+			render();
+			gotoXY (0, 19);
+			c.X = 0;
+			int ycoord = 19;
+			c.Y = ycoord;
+			colour(colorskappa[14]);
+			std ::string losing;
+			std::ifstream myfile ("youlose.txt");
+			if (myfile.is_open())
+			{
+				while ( getline (myfile,losing) )
+				{
+					c.Y = ycoord;
+					g_Console.writeToBuffer(c, losing);
+					ycoord++;
+				}
+				myfile.close();
+			}
+
+		else cout << "Unable to open file"; 		
+		}
 	}
 	renderFramerate();
 }
 void renderMainMenu()
 {
+	g_Console.clearBuffer(0x0F);
+	COORD c;
+    cls();
 
+    std::  string line;
+	std::ifstream myfile ("TGK.txt");
+	int ycoord = 0;
+	if (myfile.is_open())
+	{
+		while ( getline (myfile,line) )
+		{
+			c.X = 0;
+			c.Y = ycoord;
+			g_Console.writeToBuffer(c, line, 0x0A);
+			ycoord++;
+		}
+		myfile.close();
+	}
+	else cout << "Unable to open file"; 
+	rainbowhere += 1;
+	if(rainbowhere > 14)
+	{
+		rainbowhere = 9;
+	}
+	colour(colorskappa[rainbowhere]);
+	std:: string keepo;
+	std::ifstream anotherfile ("kapp.txt");
+	ycoord = 15;
+	if (anotherfile.is_open())
+	{
+		while ( getline (anotherfile,keepo) )
+		{
+			c.X = 0;
+			c.Y = ycoord;
+			g_Console.writeToBuffer(c, keepo);
+			ycoord++;
+		}
+		anotherfile.close();
+	}
+	else cout << "Unable to open file";
+
+	colour(colors[15]);
+	
+    c.X = 45;
+    c.Y = 14; 
+	g_Console.writeToBuffer(c, " Welcome to ");     
+
+    
+	c.X = 45;
+    c.Y = 15; 
+	g_Console.writeToBuffer(c, " 'The Great Kappa' game! ");   
+
+    c.X = 48;
+    c.Y = 17;     
+    g_Console.writeToBuffer(c, "PLAY GAME");  
+
+	c.X = 48;
+    c.Y = 19; 
+    g_Console.writeToBuffer(c, "CHALLENGES");
+      
+	c.X = 48;
+    c.Y = 21; 
+    g_Console.writeToBuffer(c, "ACHIEVEMENTS & OPTIONS"); 
+
+	c.X = 48;
+    c.Y = 23; 
+	g_Console.writeToBuffer(c, "EXITERINO"); 
+
+	int count = count2 ;
+   
+	if(count == 0)
+	{
+		c.X = 45;
+		c.Y = 17;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+	else if(count == 1)
+	{
+		c.X = 45;
+		c.Y = 19;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+	else if(count == 2)
+	{
+		c.X = 45;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+	else if(count == 3)
+	{
+		c.X = 45;
+		c.Y = 23;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+    g_Console.flushBufferToConsole();
 }
 void renderLevelSelect()
 {
@@ -607,7 +622,90 @@ void renderLevelSelect()
 }
 void renderChallenges()
 {
+	g_Console.clearBuffer(0x0F);
+	COORD c ;
+    cls();     
+	std:: string line;
+	std::ifstream myfile ("chall.txt");
+	int ycoord = 0;
+	if (myfile.is_open())
+	{
+		while ( getline (myfile,line) )
+		{
+			c.X = 0;
+			c.Y = ycoord;
+			g_Console.writeToBuffer(c, line);
+			ycoord++;
+		}
+		myfile.close();
+	}
 
+  else cout << "Unable to open file"; 
+
+    c.X = 4;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 1");
+	c.X = 4;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 2");
+	c.X = 4;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 3");
+	c.X = 4;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 4");
+	c.X = 4;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 5");
+	c.X = 24;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 6");
+	c.X = 24;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 7");
+	c.X = 24;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 8");
+	c.X = 24;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 9");
+	c.X = 24;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 10");
+	c.X = 44;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 11");
+	c.X = 44;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 12");
+	c.X = 44;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 13");
+	c.X = 44;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 14");
+	c.X = 44;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 15");
+	c.X = 64;
+	c.Y = 10;
+	g_Console.writeToBuffer(c, "Level 16");
+	c.X = 64;
+	c.Y = 14;
+	g_Console.writeToBuffer(c, "Level 17");
+	c.X = 64;
+	c.Y = 18;
+	g_Console.writeToBuffer(c, "Level 18");
+	c.X = 64;
+	c.Y = 22;
+	g_Console.writeToBuffer(c, "Level 19");
+	c.X = 64;
+	c.Y = 26;
+	g_Console.writeToBuffer(c, "Level 20");
+
+	c.X = challengearrowX;
+	c.Y = challengearrowY;
+	g_Console.writeToBuffer(c, ">");  
 }			
 void renderStats()
 {
@@ -626,50 +724,50 @@ void gameplay()            // gameplay logic
 }
 void moveCharacter()
 {
-	  //if (g_dBounceTime > g_dElapsedTime)
-       // return;
-
-	/*
-    bool bSomethingHappened = false;
-  
-    // Updating the location of the character based on the key press
-    // providing a beep sound whenver we shift the character
-    if (g_abKeyPressed[K_UP] && g_sChar.m_cLocation.Y > 0)
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.Y--;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_LEFT] && g_sChar.m_cLocation.X > 0)
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.X--;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_DOWN] && g_sChar.m_cLocation.Y < g_Console.getConsoleSize().Y - 1)
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.Y++;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_RIGHT] && g_sChar.m_cLocation.X < g_Console.getConsoleSize().X - 1)
-    {
-        //Beep(1440, 30);
-        g_sChar.m_cLocation.X++;
-        bSomethingHappened = true;
-    }
-    if (g_abKeyPressed[K_SPACE])
-    {
-        g_sChar.m_bActive = !g_sChar.m_bActive;
-        bSomethingHappened = true;
-    }
-
-    if (bSomethingHappened)
-    {
-        // set the bounce time to some time in the future to prevent accidental triggers
-        g_dBounceTime = g_dElapsedTime + 0.125; // 125ms should be enough
-    }
-	*/
+	if (g_abKeyPressed[K_UP] && g_dBounceTime < g_dElapsedTime)
+		{
+			bool nocollide = collisiondetection(1);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.Y--; 
+				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
+			}
+		}
+		else if (g_abKeyPressed[K_LEFT] && g_dBounceTime < g_dElapsedTime)
+		{
+			bool nocollide = collisiondetection(2);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.X--; 
+				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
+			}
+		}
+		else if (g_abKeyPressed[K_DOWN] && g_dBounceTime < g_dElapsedTime)
+		{
+			bool nocollide = collisiondetection(3);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.Y++; 
+				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
+			}
+		}
+		else if (g_abKeyPressed[K_RIGHT] && g_dBounceTime < g_dElapsedTime)
+		{
+			bool nocollide = collisiondetection(4);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.X++; 
+				keyinputaa = true;
+				g_dBounceTime = g_dElapsedTime + 0.125;
+			}
+		}
 }
 void processUserInput()
 {
@@ -1066,14 +1164,14 @@ void loadlevel(){
 					if(level1[i][j-1] == 5)
 					{
 						level1[i][j-1] = 1;
-						if(level1[i][j-2] == 5)
-						{
-							level1[i][j-2] = 1;
-							if(level1[i][j-3] == 5)
-							{
-								level1[i][j-3] = 1;
-							}
-						}
+					}
+					if(level1[i][j-2] == 5)
+					{
+						level1[i][j-2] = 1;
+					}
+					if(level1[i][j-3] == 5)
+					{
+						level1[i][j-3] = 1;
 					}
 					if(level1[i-1][j] == 1)
 					{
@@ -1097,14 +1195,14 @@ void loadlevel(){
 					if(level1[i][j-1] == 5)
 					{
 						level1[i][j-1] = 1;
-						if(level1[i][j-2] == 5)
-						{
-							level1[i][j-2] = 1;
-							if(level1[i][j-3] == 5)
-							{
-								level1[i][j-3] = 1;
-							}
-						}
+					}
+					if(level1[i][j-2] == 5)
+					{
+						level1[i][j-2] = 1;
+					}
+					if(level1[i][j-3] == 5)
+					{
+						level1[i][j-3] = 1;
 					}
 					if(level1[i+1][j] == 1)
 					{
@@ -1128,14 +1226,14 @@ void loadlevel(){
 					if(level1[i][j-1] == 5)
 					{
 						level1[i][j-1] = 1;
-						if(level1[i][j-2] == 5)
-						{
-							level1[i][j-2] = 1;
-							if(level1[i][j-3] == 5)
-							{
-								level1[i][j-3] = 1;
-							}
-						}
+					}
+					if(level1[i][j-2] == 5)
+					{
+						level1[i][j-2] = 1;
+					}
+					if(level1[i][j-3] == 5)
+					{
+						level1[i][j-3] = 1;
 					}
 					if(level1[i][j+1] == 1)
 					{
@@ -1215,14 +1313,14 @@ void loadlevel(){
 					if(level1[i][j+1] == 5)
 					{
 						level1[i][j+1] = 1;
-						if(level1[i][j+2] == 5)
-						{
-							level1[i][j+2] = 1;
-							if(level1[i][j+3] == 5)
-							{
-								level1[i][j+3] = 1;
-							}
-						}
+					}
+					if(level1[i][j+2] == 5)
+					{
+						level1[i][j+2] = 1;
+					}
+					if(level1[i][j+3] == 5)
+					{
+						level1[i][j+3] = 1;
 					}
 					if(level1[i][j-1] == 1)
 					{
@@ -1246,14 +1344,14 @@ void loadlevel(){
 					if(level1[i][j+1] == 5)
 					{
 						level1[i][j+1] = 1;
-						if(level1[i][j+2] == 5)
-						{
-							level1[i][j+2] = 1;
-							if(level1[i][j+3] == 5)
-							{
-								level1[i][j+3] = 1;
-							}
-						}
+					}
+					if(level1[i][j+2] == 5)
+					{
+						level1[i][j+2] = 1;
+					}
+					if(level1[i][j+3] == 5)
+					{
+						level1[i][j+3] = 1;
 					}
 					if(level1[i-1][j] == 1)
 					{
@@ -1277,14 +1375,14 @@ void loadlevel(){
 					if(level1[i][j+1] == 5)
 					{
 						level1[i][j+1] = 1;
-						if(level1[i][j+2] == 5)
-						{
-							level1[i][j+2] = 1;
-							if(level1[i][j+3] == 5)
-							{
-								level1[i][j+3] = 1;
-							}
-						}
+					}
+					if(level1[i][j+2] == 5)
+					{
+						level1[i][j+2] = 1;
+					}
+					if(level1[i][j+3] == 5)
+					{
+						level1[i][j+3] = 1;
 					}
 					if(level1[i+1][j] == 1)
 					{
@@ -1365,14 +1463,14 @@ void loadlevel(){
 					if(level1[i-1][j] == 5)
 					{
 						level1[i-1][j] = 1;
-						if(level1[i-2][j] == 5)
-						{
-							level1[i-2][j] = 1;
-							if(level1[i-3][j] == 5)
-							{
-								level1[i-3][j] = 1;
-							}
-						}
+					}
+					if(level1[i-2][j] == 5)
+					{
+						level1[i-2][j] = 1;
+					}
+					if(level1[i-3][j] == 5)
+					{
+						level1[i-3][j] = 1;
 					}
 					if(level1[i][j-1] == 1)
 					{
@@ -1396,14 +1494,14 @@ void loadlevel(){
 					if(level1[i-1][j] == 5)
 					{
 						level1[i-1][j] = 1;
-						if(level1[i-2][j] == 5)
-						{
-							level1[i-2][j] = 1;
-							if(level1[i-3][j] == 5)
-							{
-								level1[i-3][j] = 1;
-							}
-						}
+					}
+					if(level1[i-2][j] == 5)
+					{
+						level1[i-2][j] = 1;
+					}
+					if(level1[i-3][j] == 5)
+					{
+						level1[i-3][j] = 1;
 					}
 					if(level1[i][j+1] == 1)
 					{
@@ -1427,14 +1525,14 @@ void loadlevel(){
 					if(level1[i-1][j] == 5)
 					{
 						level1[i-1][j] = 1;
-						if(level1[i-2][j] == 5)
-						{
-							level1[i-2][j] = 1;
-							if(level1[i-3][j] == 5)
-							{
-								level1[i-3][j] = 1;
-							}
-						}
+					}
+					if(level1[i-2][j] == 5)
+					{
+						level1[i-2][j] = 1;
+					}
+					if(level1[i-3][j] == 5)
+					{
+						level1[i-3][j] = 1;
 					}
 					if(level1[i+1][j] == 1)
 					{
@@ -1514,15 +1612,15 @@ void loadlevel(){
 					level1[i][j] = 3;
 					if(level1[i+1][j] == 5)
 					{
-						level1[i-1][j] = 1;
-						if(level1[i+2][j] == 5)
-						{
-							level1[i+2][j] = 1;
-							if(level1[i+3][j] == 5)
-							{
-								level1[i+3][j] = 1;
-							}
-						}
+						level1[i+1][j] = 1;
+					}
+					if(level1[i+2][j] == 5)
+					{
+						level1[i+2][j] = 1;
+					}
+					if(level1[i+3][j] == 5)
+					{
+						level1[i+3][j] = 1;
 					}
 					if(level1[i][j-1] == 1)
 					{
@@ -1546,14 +1644,14 @@ void loadlevel(){
 					if(level1[i+1][j] == 5)
 					{
 						level1[i+1][j] = 1;
-						if(level1[i+2][j] == 5)
-						{
-							level1[i+2][j] = 1;
-							if(level1[i+3][j] == 5)
-							{
-								level1[i+3][j] = 1;
-							}
-						}
+					}
+					if(level1[i+2][j] == 5)
+					{
+						level1[i+2][j] = 1;
+					}
+					if(level1[i+3][j] == 5)
+					{
+						level1[i+3][j] = 1;
 					}
 					if(level1[i][j+1] == 1)
 					{
@@ -1577,14 +1675,14 @@ void loadlevel(){
 					if(level1[i+1][j] == 5)
 					{
 						level1[i+1][j] = 1;
-						if(level1[i+2][j] == 5)
-						{
-							level1[i+2][j] = 1;
-							if(level1[i+3][j] == 5)
-							{
-								level1[i+3][j] = 1;
-							}
-						}
+					}
+					if(level1[i+2][j] == 5)
+					{
+						level1[i+2][j] = 1;
+					}
+					if(level1[i+3][j] == 5)
+					{
+						level1[i+3][j] = 1;
 					}
 					if(level1[i-1][j] == 1)
 					{
@@ -1963,11 +2061,9 @@ int levelselect()
 	 g_Console.flushBufferToConsole();
 
 	gotoXY(2,0);
-	//levelnumber = 1;
 	int leftarrowX = levelarrowX;
 	int leftarrowY = levelarrowY;
-	//system("pause > nul");
-		getInput();
+		//getInput();
 		if(g_abKeyPressed[K_DOWN] && levelnumber != 5 && levelnumber != 10 && levelnumber != 15 && levelnumber != 20 && levelnumber != 25 && g_dBounceTime < g_dElapsedTime)
 		{
 			g_dBounceTime = g_dElapsedTime + 0.125;
@@ -1981,7 +2077,6 @@ int levelselect()
 			g_Console.writeToBuffer(c, ">");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			//system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_UP] && levelnumber != 1 && levelnumber != 6 && levelnumber != 11 && levelnumber != 16 && levelnumber != 21 && g_dBounceTime < g_dElapsedTime)
 		{
@@ -1996,7 +2091,6 @@ int levelselect()
 			g_Console.writeToBuffer(c, ">");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			//system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_LEFT] && levelnumber > 5 && g_dBounceTime < g_dElapsedTime)
 		{
@@ -2011,7 +2105,6 @@ int levelselect()
 			g_Console.writeToBuffer(c, ">");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			//system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_RIGHT] && levelnumber < 16 && g_dBounceTime < g_dElapsedTime)
 		{
@@ -2026,7 +2119,6 @@ int levelselect()
 			g_Console.writeToBuffer(c, ">");
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
-			//system("pause > nul");
 		}
 		else if(g_abKeyPressed[K_RETURN] && g_dBounceTime < g_dElapsedTime)
 		{
@@ -2045,100 +2137,14 @@ int levelselect()
 	return 0;
 }
 int menu()  
-{   g_Console.clearBuffer(0x0F);
-	COORD c ;
+{   
+	g_Console.clearBuffer(0x0F);
+	COORD c;
     cls();
     int count = count2 ;
 
-    std::  string line;
-	std::ifstream myfile ("TGK.txt");
-	int ycoord = 0;
-	if (myfile.is_open())
-	{
-		while ( getline (myfile,line) )
-		{
-			c.X = 0;
-			c.Y = ycoord;
-			g_Console.writeToBuffer(c, line, 0x0A);
-			ycoord++;
-		}
-		myfile.close();
-	}
-	else cout << "Unable to open file"; 
-	rainbowhere += 1;
-	if(rainbowhere > 14)
-	{
-		rainbowhere = 9;
-	}
-	colour(colorskappa[rainbowhere]);
-	std:: string keepo;
-	std::ifstream anotherfile ("kapp.txt");
-	ycoord = 15;
-	if (anotherfile.is_open())
-	{
-		while ( getline (anotherfile,keepo) )
-		{
-			c.X = 0;
-			c.Y = ycoord;
-			g_Console.writeToBuffer(c, keepo);
-			ycoord++;
-		}
-		anotherfile.close();
-	}
-	else cout << "Unable to open file";
+	renderMainMenu();
 
-	colour(colors[15]);
-	
-    c.X = 45;
-    c.Y = 14; 
-	g_Console.writeToBuffer(c, " Welcome to ");     
-
-    
-	c.X = 45;
-    c.Y = 15; 
-	g_Console.writeToBuffer(c, " 'The Great Kappa' game! ");   
-
-    c.X = 48;
-    c.Y = 17;     
-    g_Console.writeToBuffer(c, "PLAY GAME");  
-
-	c.X = 48;
-    c.Y = 19; 
-    g_Console.writeToBuffer(c, "CHALLENGES");
-      
-	c.X = 48;
-    c.Y = 21; 
-    g_Console.writeToBuffer(c, "ACHIEVEMENTS & OPTIONS"); 
-
-	c.X = 48;
-    c.Y = 23; 
-	g_Console.writeToBuffer(c, "EXITERINO"); 
-   
-	if(count == 0)
-	{
-		c.X = 45;
-		c.Y = 17;
-		g_Console.writeToBuffer(c, ">"); 
-	}
-	else if(count == 1)
-	{
-		c.X = 45;
-		c.Y = 19;
-		g_Console.writeToBuffer(c, ">"); 
-	}
-	else if(count == 2)
-	{
-		c.X = 45;
-		c.Y = 21;
-		g_Console.writeToBuffer(c, ">"); 
-	}
-	else if(count == 3)
-	{
-		c.X = 45;
-		c.Y = 23;
-		g_Console.writeToBuffer(c, ">"); 
-	}
-    g_Console.flushBufferToConsole();
 	int frequency = 2640;    
     if ( g_abKeyPressed[K_DOWN] == 1 && g_dBounceTime < g_dElapsedTime)    
     {
@@ -2325,88 +2331,7 @@ int challenge()
 	g_Console.clearBuffer(0x0F);
 	COORD c ;
     cls();     
-	std:: string line;
-	std::ifstream myfile ("chall.txt");
-	int ycoord = 0;
-	if (myfile.is_open())
-	{
-		while ( getline (myfile,line) )
-		{
-			c.X = 0;
-			c.Y = ycoord;
-			g_Console.writeToBuffer(c, line);
-			ycoord++;
-		}
-		myfile.close();
-	}
-
-  else cout << "Unable to open file"; 
-
-    c.X = 4;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, "Level 1");
-	c.X = 4;
-	c.Y = 14;
-	g_Console.writeToBuffer(c, "Level 2");
-	c.X = 4;
-	c.Y = 18;
-	g_Console.writeToBuffer(c, "Level 3");
-	c.X = 4;
-	c.Y = 22;
-	g_Console.writeToBuffer(c, "Level 4");
-	c.X = 4;
-	c.Y = 26;
-	g_Console.writeToBuffer(c, "Level 5");
-	c.X = 24;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, "Level 6");
-	c.X = 24;
-	c.Y = 14;
-	g_Console.writeToBuffer(c, "Level 7");
-	c.X = 24;
-	c.Y = 18;
-	g_Console.writeToBuffer(c, "Level 8");
-	c.X = 24;
-	c.Y = 22;
-	g_Console.writeToBuffer(c, "Level 9");
-	c.X = 24;
-	c.Y = 26;
-	g_Console.writeToBuffer(c, "Level 10");
-	c.X = 44;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, "Level 11");
-	c.X = 44;
-	c.Y = 14;
-	g_Console.writeToBuffer(c, "Level 12");
-	c.X = 44;
-	c.Y = 18;
-	g_Console.writeToBuffer(c, "Level 13");
-	c.X = 44;
-	c.Y = 22;
-	g_Console.writeToBuffer(c, "Level 14");
-	c.X = 44;
-	c.Y = 26;
-	g_Console.writeToBuffer(c, "Level 15");
-	c.X = 64;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, "Level 16");
-	c.X = 64;
-	c.Y = 14;
-	g_Console.writeToBuffer(c, "Level 17");
-	c.X = 64;
-	c.Y = 18;
-	g_Console.writeToBuffer(c, "Level 18");
-	c.X = 64;
-	c.Y = 22;
-	g_Console.writeToBuffer(c, "Level 19");
-	c.X = 64;
-	c.Y = 26;
-	g_Console.writeToBuffer(c, "Level 20");
-
-	c.X = challengearrowX;
-	c.Y = challengearrowY;
-	g_Console.writeToBuffer(c, ">");  
-    //getInput();  
+	renderChallenges();
     if ( g_abKeyPressed[K_ESCAPE] == 1 )   
     {
         return 4;  
