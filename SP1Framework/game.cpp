@@ -13,7 +13,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-bool    g_abKeyPressed[K_COUNT];
+bool g_abKeyPressed[K_COUNT];
 bool levelfix = true;
 bool keyinputaa = true;	
 double  g_dElapsedTime;
@@ -27,7 +27,9 @@ int levelselected = 0;
 int challengeselected = 0;
 int achievementselected = 0;
 int count2 = 0;
-int direction = 0;
+int challengearrowX = 2;
+int challengearrowY = 10;
+//int direction = 0;
 int levelno = 1;
 int level1[16][48];
 int level1AI[16][48];
@@ -54,7 +56,10 @@ const WORD colorskappa[] =  {
 							0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C,
 							0x0D, 0x0E, 0x0F
 	                        };
-
+//Copy pasta stuff
+//g_Console.clearBuffer(0x1F);
+//g_Console.writeToBuffer(c, wining);
+//g_Console.flushBufferToConsole();
 
 void renderMap()
 {
@@ -738,15 +743,14 @@ void errorreport()
 }
 int newmainmenu()
 {
-		keyinputaa = true;
-		colour(colors[15]);
-		if(ministate == 0)
-		{
+	keyinputaa = true;
+	colour(colors[15]);
+	switch(ministate)
+	{
+		case 0:
 			ministate = menu();
 			return 0;
-		}
-		else if(ministate == 1)
-		{
+		case 1:
 			levelselected = levelselect();
 			if(levelselected == 68)
 			{
@@ -755,9 +759,7 @@ int newmainmenu()
 			}
 			ministate = 0;
 			return levelselected;
-		}
-		else if(ministate == 2)
-		{
+		case 2:
 			challengeselected = challenge();
 			if(challengeselected == 4)
 			{
@@ -768,9 +770,7 @@ int newmainmenu()
 			{
 				return 0;
 			}
-		}
-		else if(ministate == 3)
-		{
+		case 3:
 			achievementselected = achievement();
 			if(achievementselected == 4)
 			{
@@ -779,42 +779,11 @@ int newmainmenu()
 			}
 			else
 			{
-				ministate = 0;
 				return 0;
 			}
-		}
-		else if(ministate == 69)
-		{
-			return 69;
-		}
-		/*int x = menu();
-		switch (x)
-		{
-		case 1:
-			game
-			while (levelfix)
-			{
-				y = levelselect();
-				if(y == 68)
-				{
-					levelfix = false;
-				}
-				else
-				{
-					return y;
-				}
-			}
-			levelfix = true;
-			break;
-		case 2:
-			challenge();
-			break;
-		case 3:
-			achievement();
-			break;
 		case 69:
 			return 69;
-		}*/
+	}
 }
 void loadlevel(){
 	//laser up
@@ -1868,7 +1837,6 @@ int levelselect()
 		{
 			c.X = 0;
 			c.Y = ycoord;
-			//cout << line << '\n';
 			g_Console.writeToBuffer(c, line);
 			ycoord++;
 		}
@@ -2183,195 +2151,183 @@ int menu()
 		g_Console.writeToBuffer(c, ">"); 
 	}
     g_Console.flushBufferToConsole();
-	int frequency = 2640;
-        getInput();     
-        if ( g_abKeyPressed[K_DOWN] == 1 )    
-        {
-            if ( count == 0 )   
-            {	
-				c.X = 45;
-				c.Y = 17;
-                g_Console.writeToBuffer(c, " "); 
+	int frequency = 2640;    
+    if ( g_abKeyPressed[K_DOWN] == 1 )    
+    {
+        if ( count == 0 )   
+        {	
+			c.X = 45;
+			c.Y = 17;
+            g_Console.writeToBuffer(c, " "); 
 
-				c.X = 45;
-				c.Y = 19;
-                g_Console.writeToBuffer(c, ">");
+			c.X = 45;
+			c.Y = 19;
+            g_Console.writeToBuffer(c, ">");
 
-                count = 1 ;       
-				frequency -= 300;
+            count = 1 ;       
+			frequency -= 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                //system("pause > nul");
-            }
-            else if ( count == 1 )   
-            {
+        }
+        else if ( count == 1 )   
+        {
 				
-                c.X = 45;
-				c.Y = 19;
-				 g_Console.writeToBuffer(c, " ");
+            c.X = 45;
+			c.Y = 19;
+			g_Console.writeToBuffer(c, " ");
 
-				c.X = 45;
-				c.Y = 21;
-                g_Console.writeToBuffer(c, ">");
+			c.X = 45;
+			c.Y = 21;
+            g_Console.writeToBuffer(c, ">");
 
-                count = 2 ;   
-				frequency -= 300;
+            count = 2 ;   
+			frequency -= 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                //system("pause > nul");
-            }
-            else if ( count == 2 ) 
-            {
-				c.X = 45;
-				c.Y = 21;
-                g_Console.writeToBuffer(c, " ");
+        }
+        else if ( count == 2 ) 
+        {
+			c.X = 45;
+			c.Y = 21;
+            g_Console.writeToBuffer(c, " ");
 
-                c.X = 45;
-				c.Y = 23;
-                g_Console.writeToBuffer(c, ">");
+            c.X = 45;
+			c.Y = 23;
+            g_Console.writeToBuffer(c, ">");
                
-                count = 3 ;    
-				frequency -= 300;
+            count = 3 ;    
+			frequency -= 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                //system("pause > nul");
-            }
+        }
 			
+    }   
+    else if ( g_abKeyPressed[K_UP] == 1 )     
+    {
+        if ( count == 1 )  
+        {
+			c.X = 45;
+			c.Y = 19;
+            g_Console.writeToBuffer(c, " ");
+                
+
+			c.X = 45;
+			c.Y = 17;
+            g_Console.writeToBuffer(c, ">");           
+            count = 0 ;   
+			frequency += 300;
+			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
+        }
+        else if ( count == 2 ) 
+        {
+			c.X = 45;
+			c.Y = 21;
+            g_Console.writeToBuffer(c, " ");
+                
+			c.X = 45;
+			c.Y = 19;
+            g_Console.writeToBuffer(c, ">");
+                
+            count = 1 ;    
+			frequency += 300;
+			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
+         }
+         else if ( count == 3 )   
+         {
+			c.X = 45;
+			c.Y = 23;
+            g_Console.writeToBuffer(c, " ");
+                
+			c.X = 45;
+			c.Y = 21;
+            g_Console.writeToBuffer(c, ">");
+                
+            count = 2 ;    
+			frequency += 300;
+			Beep(frequency, 60);
+			g_Console.flushBufferToConsole();
+         }
+    }     
+    else if ( g_abKeyPressed[K_RETURN] == 1 )        
+    {
+		if ( count == 0 )  
+        {
+            return 1;  
+        }
+        if ( count == 1 )   
+        {
+            return 2;    
+        }  
+        if ( count == 2 )  
+        {
+            return 3;   
+        }
+        if ( count == 3 )      
+        {
+
+			c.X = 30;
+			c.Y = 10;
+            g_Console.writeToBuffer(c, "Are you SURE?");
+			g_Console.flushBufferToConsole();
+            Sleep(500);
+
+			c.X = 50;
+			c.Y = 6;
+            g_Console.writeToBuffer(c, "SRSLY");
+			g_Console.flushBufferToConsole();
+            Sleep(400);
+
+			c.X = 13;
+			c.Y = 27;
+            g_Console.writeToBuffer(c, "REALLY?");
+			g_Console.flushBufferToConsole();
+			Sleep(300);
+
+			c.X = 43;
+			c.Y = 21;
+            g_Console.writeToBuffer(c, "BUT WHY");
+			g_Console.flushBufferToConsole();
+            Sleep(200);
+
+
+			c.X = 3;
+			c.Y = 16;
+            g_Console.writeToBuffer(c, "I THOUGHT YOU LOVED ME");
+			g_Console.flushBufferToConsole();
+            Sleep(200);       
+
+			c.X = 70;
+			c.Y = 23;
+            g_Console.writeToBuffer(c, ":-("); 
+			g_Console.flushBufferToConsole();
+            Sleep(200); 
+
+			c.X = 17;
+			c.Y = 5;
+            g_Console.writeToBuffer(c, "GET BACK HERE");
+			g_Console.flushBufferToConsole();
+            Sleep(200);   
+
+			c.X = 39;
+			c.Y = 14;
+            g_Console.writeToBuffer(c, "DONT PRESS ENTER");
+			g_Console.flushBufferToConsole();
+            Sleep(200);      
+
+			c.X = 39;
+			c.Y = 17;
+            g_Console.writeToBuffer(c, "NOOOOOOOOOO");
+			g_Console.flushBufferToConsole();
+                
+			gotoXY(0,0);
+            return 69;
+
         }   
-        else if ( g_abKeyPressed[K_UP] == 1 )     
-        {
-            if ( count == 1 )  
-            {
-				c.X = 45;
-				c.Y = 19;
-                g_Console.writeToBuffer(c, " ");
-                
-
-				c.X = 45;
-				c.Y = 17;
-                g_Console.writeToBuffer(c, ">");           
-                count = 0 ;   
-				frequency += 300;
-			Beep(frequency, 60);
-			g_Console.flushBufferToConsole();
-                //system("pause > nul");
-            }
-            else if ( count == 2 ) 
-            {
-				c.X = 45;
-				c.Y = 21;
-                g_Console.writeToBuffer(c, " ");
-                
-				c.X = 45;
-				c.Y = 19;
-                g_Console.writeToBuffer(c, ">");
-                
-                count = 1 ;    
-				frequency += 300;
-			Beep(frequency, 60);
-			g_Console.flushBufferToConsole();
-                //system("pause > nul");
-            }
-            else if ( count == 3 )   
-            {
-				c.X = 45;
-				c.Y = 23;
-                g_Console.writeToBuffer(c, " ");
-                
-				c.X = 45;
-				c.Y = 21;
-                g_Console.writeToBuffer(c, ">");
-                
-                count = 2 ;    
-				frequency += 300;
-			Beep(frequency, 60);
-			g_Console.flushBufferToConsole();
-                //system("pause > nul");
-            }
-        }     
-        else if ( g_abKeyPressed[K_RETURN] == 1 )        
-        {
-            if ( count == 0 )  
-            {
-                return 1;  
-            }
-            if ( count == 1 )   
-            {
-                return 2;    
-            }  
-            if ( count == 2 )  
-            {
-                return 3;   
-            }
-            if ( count == 3 )      
-            {
-
-				c.X = 30;
-				c.Y = 10;
-                g_Console.writeToBuffer(c, "Are you SURE?");
-				g_Console.flushBufferToConsole();
-                Sleep(500);
-
-
-				c.X = 50;
-				c.Y = 6;
-                g_Console.writeToBuffer(c, "SRSLY");
-				g_Console.flushBufferToConsole();
-                Sleep(400);
-
-
-				c.X = 13;
-				c.Y = 27;
-                g_Console.writeToBuffer(c, "REALLY?");
-				g_Console.flushBufferToConsole();
-				Sleep(300);
-
-
-
-				c.X = 43;
-				c.Y = 21;
-                g_Console.writeToBuffer(c, "BUT WHY");
-				g_Console.flushBufferToConsole();
-                Sleep(200);
-
-
-				c.X = 3;
-				c.Y = 16;
-                g_Console.writeToBuffer(c, "I THOUGHT YOU LOVED ME");
-				g_Console.flushBufferToConsole();
-                Sleep(200);       
-
-				c.X = 70;
-				c.Y = 23;
-                g_Console.writeToBuffer(c, ":-("); 
-				g_Console.flushBufferToConsole();
-                Sleep(200); 
-
-
-				c.X = 17;
-				c.Y = 5;
-                g_Console.writeToBuffer(c, "GET BACK HERE");
-				g_Console.flushBufferToConsole();
-                Sleep(200);   
-
-				c.X = 39;
-				c.Y = 14;
-                g_Console.writeToBuffer(c, "DONT PRESS ENTER");
-				g_Console.flushBufferToConsole();
-                Sleep(200);      
-
-				c.X = 39;
-				c.Y = 17;
-                g_Console.writeToBuffer(c, "NOOOOOOOOOO");
-				g_Console.flushBufferToConsole();
-                
-				gotoXY(0,0);
-                return 69;
-
-            }   
-        } 
-		count2 = count;
-		return 0;
+    } 
+	count2 = count;
+	return 0;
 }
 int challenge() 
 {
@@ -2379,19 +2335,19 @@ int challenge()
 	COORD c ;
     cls();     
 	std:: string line;
-  std::ifstream myfile ("chall.txt");
-  int ycoord = 0;
-  if (myfile.is_open())
-  {
-    while ( getline (myfile,line) )
-    {
-		c.X = 0;
-		c.Y = ycoord;
-		g_Console.writeToBuffer(c, line);
-		ycoord++;
-    }
-    myfile.close();
-  }
+	std::ifstream myfile ("chall.txt");
+	int ycoord = 0;
+	if (myfile.is_open())
+	{
+		while ( getline (myfile,line) )
+		{
+			c.X = 0;
+			c.Y = ycoord;
+			g_Console.writeToBuffer(c, line);
+			ycoord++;
+		}
+		myfile.close();
+	}
 
   else cout << "Unable to open file"; 
 
@@ -2456,80 +2412,85 @@ int challenge()
 	c.Y = 26;
 	g_Console.writeToBuffer(c, "Level 20");
 
-	c.X = 2;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, ">"); 
-	g_Console.flushBufferToConsole();
-    int xcoord = 2 ;   
-    ycoord = 10 ;  
-    while ( true )  
+	c.X = challengearrowX;
+	c.Y = challengearrowY;
+	g_Console.writeToBuffer(c, ">");  
+    //getInput();  
+    if ( g_abKeyPressed[K_ESCAPE] == 1 )   
     {
-        getInput();  
-        if ( g_abKeyPressed[K_ESCAPE] == 1 )   
-        {
-            return 4;  
-            break;
-        }
-        if ( ( g_abKeyPressed[K_RIGHT] == 1 ) && ( xcoord < 65 ) )    
-        {
-            gotoXY(xcoord,ycoord);    
-            cout << " " ;    
-            xcoord += 20 ;
-            gotoXY(xcoord ,ycoord);   
-            cout << ">" ;    
-            system("pause > nul");
-        }    
-        if ( ( g_abKeyPressed[K_LEFT] == 1) && ( xcoord>5 ) )    
-        {
-            gotoXY(xcoord,ycoord); 
-            cout << " " ; 
-            xcoord -= 20 ;  
-            gotoXY(xcoord,ycoord) ;   
-            cout << ">" ;  
-            system("pause > nul"); 
-        }    
-        if ( ( g_abKeyPressed[K_DOWN] == 1 ) && ( ycoord < 26 ) )  
-        {
-            gotoXY(xcoord,ycoord); 
-            cout << " " ; 
-            ycoord += 4;  
-            gotoXY(xcoord,ycoord) ;   
-            cout << ">" ;  
-            system("pause > nul");   
-        } 
-        if ( ( g_abKeyPressed[K_UP] == 1 ) && ( ycoord > 10 ) )  
-        {
-            gotoXY(xcoord,ycoord); 
-            cout << " " ; 
-            ycoord -= 4;  
-            gotoXY(xcoord,ycoord) ;   
-            cout << ">" ;  
-            system("pause > nul");   
-        }
+        return 4;  
     }
+    if ( ( g_abKeyPressed[K_RIGHT] == 1 ) && ( challengearrowX < 62 ) )    
+    {
+		c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, " ");
+		challengearrowX += 20;
+		c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, ">");
+    }    
+    if ( ( g_abKeyPressed[K_LEFT] == 1) && ( challengearrowX>5 ) )    
+    {
+        c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, " ");
+		challengearrowX -= 20;
+		c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, ">");
+    }    
+    if ( ( g_abKeyPressed[K_DOWN] == 1 ) && ( challengearrowY < 26 ) )  
+    {
+        c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, " ");
+		challengearrowY += 4;
+		c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, ">");
+    } 
+    if ( ( g_abKeyPressed[K_UP] == 1 ) && ( challengearrowY > 10 ) )  
+    {
+        c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, " ");
+		challengearrowY -= 4;
+		c.X = challengearrowX;
+		c.Y = challengearrowY;
+		g_Console.writeToBuffer(c, ">");
+    }
+	g_Console.flushBufferToConsole();
+	return 0;
 }   
 int achievement()  
 {     
-    cls();
-     std:: string line;
-  std::ifstream myfile ("achi.txt");
-  if (myfile.is_open())
-  {
-    while ( getline (myfile,line) )
-    {
-      cout << line << '\n';
-    }
-    myfile.close();
-  }
+	cls();
+	COORD c;
+	g_Console.clearBuffer(0x0F);
+	c.X = 0;
+	int ycoord = 0;
+	c.Y = ycoord;
+    std:: string line;
+	std::ifstream myfile ("achi.txt");
+	if (myfile.is_open())
+	{
+		while ( getline (myfile,line) )
+		{
+			c.Y = ycoord;
+			g_Console.writeToBuffer(c, line);
+			ycoord++;
+			cout << line << '\n';
+		}
+		myfile.close();
+	}
 
-  else cout << "Unable to open file"; 
-    while (true)   
+	else cout << "Unable to open file"; 
+    getInput();
+    if ( g_abKeyPressed[K_ESCAPE] == 1 )    
     {
-        getInput();
-        if ( g_abKeyPressed[K_ESCAPE] == 1 )    
-        {
-            return 4;  
-            break;
-        } 
-    }
+        return 4;  
+    } 
+	g_Console.flushBufferToConsole();
+	return 0;
 }
