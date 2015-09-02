@@ -13,18 +13,23 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+bool    g_abKeyPressed[K_COUNT];
+bool levelfix = true;
+bool keyinputaa = true;	
 double  g_dElapsedTime;
 double  g_dDeltaTime;
-bool    g_abKeyPressed[K_COUNT];
 int levelnumber;
-int y;
-bool levelfix = true;
-bool keyinputaa = true;			
+int y;		
 int rainbowhere = 9;
 int gamestate = 1;
+int ministate = 0;
+int levelselected = 0;
+int challengeselected = 0;
+int achievementselected = 0;
+int count2 = 0;
+int direction = 0;
 int levelno = 1;
 int level1[16][48];
-int level1reset[16][48];
 int level1AI[16][48];
 void loadlevel();
 void loadlight();
@@ -58,173 +63,173 @@ void renderMap()
 
     COORD c;
     int xcoord = 0;
-		int ycoord = 1;
-		for (int i = 0; i < 16; ++i)
+	int ycoord = 1;
+	for (int i = 0; i < 16; ++i)
+	{
+		for(int j = 0; j < 48; ++j)
 		{
-			for(int j = 0; j < 48; ++j)
+			//colour(colors[12]);
+			//gotoXY(j,i+1);
+			if(level1[i][j] == 0)
 			{
-				//colour(colors[12]);
-				//gotoXY(j,i+1);
-				if(level1[i][j] == 0)
-				{
-					//cout << static_cast<char>(219);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(219));
-					g_Console.writeToBuffer(c, static_cast<char>(219));
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 1)
-				{
-					//cout << ' ';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, ' ');
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 2)
-				{
-					//cout << static_cast<char>(1);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(1));
-					g_Console.writeToBuffer(c, static_cast<char>(1));
-					xcoord++;
-					continue;
-				}
-				else if((level1[i][j] == 3)||(level1[i][j] == 4)||(level1[i][j] == 6)||(level1[i][j] == 7))
-				{
-					//cout << static_cast<char>(2);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(2));
-					g_Console.writeToBuffer(c, static_cast<char>(2));
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 5)
-				{
-					colour(colors[13]);
-					//cout << static_cast<char>(15);
-					c.X = xcoord;
-					c.Y = ycoord;
-					//g_Console.writeToBuffer(c, static_cast<char>(15));
-					g_Console.writeToBuffer(c, static_cast<char>(15), 0x0E);
-					xcoord++;
-					colour(colors[12]);
-					continue;
-				}
-				else if((level1[i][j] == 15)||(level1[i][j] == 16)||(level1[i][j] == 17)||(level1[i][j] == 18))
-				{
-					colour(colors[16]);
-					if(level1[i][j] == 15)
-					{
-						//cout << '^';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, '^');
-					}
-					else if(level1[i][j] == 16)
-					{
-						//cout << 'V';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, 'V');
-					}
-					else if(level1[i][j] == 17)
-					{
-						//cout << '>';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, '>');
-					}
-					else if(level1[i][j] == 18)
-					{
-						//cout << '<';
-						c.X = xcoord;
-						c.Y = ycoord;
-						g_Console.writeToBuffer(c, '<');
-					}
-					colour(colors[12]);
-					xcoord++;
-					continue;
-				}
-				else if(level1[i][j] == 19)
+				//cout << static_cast<char>(219);
+				c.X = xcoord;
+				c.Y = ycoord;
+				//g_Console.writeToBuffer(c, static_cast<char>(219));
+				g_Console.writeToBuffer(c, static_cast<char>(219));
+				xcoord++;
+				continue;
+			}
+			else if(level1[i][j] == 1)
+			{
+				//cout << ' ';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, ' ');
+				xcoord++;
+				continue;
+			}
+			else if(level1[i][j] == 2)
+			{
+				//cout << static_cast<char>(1);
+				c.X = xcoord;
+				c.Y = ycoord;
+				//g_Console.writeToBuffer(c, static_cast<char>(1));
+				g_Console.writeToBuffer(c, static_cast<char>(1));
+				xcoord++;
+				continue;
+			}
+			else if((level1[i][j] == 3)||(level1[i][j] == 4)||(level1[i][j] == 6)||(level1[i][j] == 7))
+			{
+				//cout << static_cast<char>(2);
+				c.X = xcoord;
+				c.Y = ycoord;
+				//g_Console.writeToBuffer(c, static_cast<char>(2));
+				g_Console.writeToBuffer(c, static_cast<char>(2));
+				xcoord++;
+				continue;
+			}
+			else if(level1[i][j] == 5)
+			{
+				colour(colors[13]);
+				//cout << static_cast<char>(15);
+				c.X = xcoord;
+				c.Y = ycoord;
+				//g_Console.writeToBuffer(c, static_cast<char>(15));
+				g_Console.writeToBuffer(c, static_cast<char>(15), 0x0E);
+				xcoord++;
+				colour(colors[12]);
+				continue;
+			}
+			else if((level1[i][j] == 15)||(level1[i][j] == 16)||(level1[i][j] == 17)||(level1[i][j] == 18))
+			{
+				colour(colors[16]);
+				if(level1[i][j] == 15)
 				{
 					//cout << '^';
 					c.X = xcoord;
 					c.Y = ycoord;
 					g_Console.writeToBuffer(c, '^');
-					xcoord++;
-					continue;
 				}
-				else if(level1[i][j] == 20)
+				else if(level1[i][j] == 16)
 				{
 					//cout << 'V';
 					c.X = xcoord;
 					c.Y = ycoord;
 					g_Console.writeToBuffer(c, 'V');
-					xcoord++;
-					continue;
 				}
-				else if(level1[i][j] == 23)
+				else if(level1[i][j] == 17)
 				{
-					//cout << '>';
+				//cout << '>';
 					c.X = xcoord;
 					c.Y = ycoord;
 					g_Console.writeToBuffer(c, '>');
-					xcoord++;
-					continue;
 				}
-				else if(level1[i][j] == 22)
+				else if(level1[i][j] == 18)
 				{
 					//cout << '<';
 					c.X = xcoord;
 					c.Y = ycoord;
 					g_Console.writeToBuffer(c, '<');
-					xcoord++;
-					continue;
 				}
-				else if(level1[i][j] == 21)
-				{
-					colour(colors[16]);
-					//cout << '|';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '|');
-					xcoord++;
-					colour(colors[12]);
-					continue;
-				}
-				else if(level1[i][j] == 25)
-				{
-					colour(colors[16]);
-					//cout << '-';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, '-');
-					xcoord++;
-					colour(colors[12]);
-					continue;
-				}
-				else if(level1[i][j] == 69)
-				{
-					//cout << 'x';
-					c.X = xcoord;
-					c.Y = ycoord;
-					g_Console.writeToBuffer(c, 'x');
-					xcoord++;
-					continue;
-				}
+				colour(colors[12]);
+				xcoord++;
+				continue;
 			}
-			//cout << '\n';
-			xcoord = 0;
-			ycoord++;
+			else if(level1[i][j] == 19)
+			{
+				//cout << '^';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, '^');
+				xcoord++;
+				continue;
+			}
+			else if(level1[i][j] == 20)
+			{
+				//cout << 'V';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, 'V');
+				xcoord++;
+				continue;
+			}
+			else if(level1[i][j] == 23)
+			{
+				//cout << '>';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, '>');
+				xcoord++;
+				continue;
+			}
+			else if(level1[i][j] == 22)
+			{
+				//cout << '<';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, '<');
+				xcoord++;
+				continue;
+			}
+			else if(level1[i][j] == 21)
+			{
+				colour(colors[16]);
+				//cout << '|';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, '|');
+				xcoord++;
+				colour(colors[12]);
+				continue;
+			}
+			else if(level1[i][j] == 25)
+			{
+				colour(colors[16]);
+				//cout << '-';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, '-');
+				xcoord++;
+				colour(colors[12]);
+				continue;
+			}
+			else if(level1[i][j] == 69)
+			{
+				//cout << 'x';
+				c.X = xcoord;
+				c.Y = ycoord;
+				g_Console.writeToBuffer(c, 'x');
+				xcoord++;
+				continue;
+			}
 		}
-		renderCharacter();
-		g_Console.flushBufferToConsole();
+		//cout << '\n';
+		xcoord = 0;
+		ycoord++;
+	}
+	renderCharacter();
+	g_Console.flushBufferToConsole();
 }
 bool collisiondetection(int x)
 {
@@ -302,65 +307,55 @@ void update(double dt)
     g_dElapsedTime += dt;
     g_dDeltaTime = dt;
 
+	if(gamestate == 2)
+	{
 	  // Updating the location of the character based on the key press
-    if (g_abKeyPressed[K_UP])
-    {
-		bool nocollide = collisiondetection(1);
-		if(nocollide)
+		if (g_abKeyPressed[K_UP])
 		{
-			Beep(1440, 60);
-			charLocation.Y--; 
-			keyinputaa = true;
+			bool nocollide = collisiondetection(1);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.Y--; 
+				keyinputaa = true;
+			}
 		}
-		//render();
-    }
-    else if (g_abKeyPressed[K_LEFT])
-    {
-		bool nocollide = collisiondetection(2);
-		if(nocollide)
+		else if (g_abKeyPressed[K_LEFT])
 		{
-			Beep(1440, 60);
-			charLocation.X--; 
-			keyinputaa = true;
+			bool nocollide = collisiondetection(2);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.X--; 
+				keyinputaa = true;
+			}
 		}
-		//render();
-    }
-    else if (g_abKeyPressed[K_DOWN])
-    {
-		bool nocollide = collisiondetection(3);
-		if(nocollide)
+		else if (g_abKeyPressed[K_DOWN])
 		{
-			Beep(1440, 60);
-			charLocation.Y++; 
-			keyinputaa = true;
+			bool nocollide = collisiondetection(3);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.Y++; 
+				keyinputaa = true;
+			}
 		}
-		//render();
-    }
-    else if (g_abKeyPressed[K_RIGHT])
-    {
-		bool nocollide = collisiondetection(4);
-		if(nocollide)
+		else if (g_abKeyPressed[K_RIGHT])
 		{
-			Beep(1440, 60);
-			charLocation.X++; 
-			keyinputaa = true;
+			bool nocollide = collisiondetection(4);
+			if(nocollide)
+			{
+				Beep(1440, 60);
+				charLocation.X++; 
+				keyinputaa = true;
+			}
 		}
-		//render();
-    }
 
     // quits the game i	f player hits the escape key
     if (g_abKeyPressed[K_ESCAPE])
 		gamestate = 1;
         //g_quitGame = true;
-
-   /* switch (g_eGameState)
-    {
-        case S_SPLASHSCREEN : splashScreenWait(); // game logic for the splash screen
-            break;
-        case S_GAME: gameplay(); // gameplay logic when we are in the game
-            break;
-    }*/
-	
+	}
 }
 void updateSplashScreen()
 {
@@ -487,19 +482,11 @@ void render()
 			{
 				for(int j = 0; j < 48; j++)
 				{
-					level1reset[i][j] = blevel1reset[i][j];
-				}
-			}
-			for(int i = 0; i < 16; i++)
-			{
-				for(int j = 0; j < 48; j++)
-				{
 					level1AI[i][j] = blevel1AI[i][j];
 				}
 			}
 			charLocation.X = 1;
 			charLocation.Y = 2;
-			//render();
 		}
 		else if(x == 2)
 		{
@@ -515,28 +502,20 @@ void render()
 			{
 				for(int j = 0; j < 48; j++)
 				{
-					level1reset[i][j] = level2reset[i][j];
-				}
-			}
-			for(int i = 0; i < 16; i++)
-			{
-				for(int j = 0; j < 48; j++)
-				{
 					level1AI[i][j] = level2AI[i][j];
 				}
 			}
 			charLocation.X = 1;
 			charLocation.Y = 2;
-			//render();
 		}
 		else
 		{
-			errorreport();
 			return;
 		}
 	}
-	else
+	else if(gamestate == 2)
 	{
+		renderFramerate();
 		if(!keyinputaa)
 		{
 			return;
@@ -546,57 +525,21 @@ void render()
 		loadlevel();
 		loadlight();
 
-		// clear previous screen
 		colour(0x0F);
-		//cls();
-		//g_Console.clearBuffer(0x0F);
-		//render the game
-
-		//render test screen code (not efficient at all)
-		/*const WORD colors[] =   {
-								0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-								0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6,
-								0x0F, 0x0E, 0x09, 0x0A
-								};*/
-	
-		/*for (int i = 0; i < 12; ++i)
-		{
-			gotoXY(3*i,i+1);
-			colour(colors[i]);
-			std::cout << "WOW";
-		}*/
 		gotoXY(0,1);
 		renderMap();
 		if(level1[charLocation.Y-1][charLocation.X] == 69)
-			{
-				resetlevel();
-				//loadlevel();
-				keyinputaa = true;
-				render();
-				gotoXY (0, 17);
-				c.X = 0;
-				int ycoord = 17;
-				c.Y = ycoord;
-				colour(colorskappa[14]);
-				//cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
-				//cout<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"  "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
-				//cout<<"    "<<" "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<" "<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
-				//cout<<"    "<<"  "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"  "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
-				//cout<<"    "<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<" "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<endl;
-				//cout<<"    "<<"   "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"      "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-				//cout<<"    "<<"        Press ESC to exit to Level Select screen";
-				/*for(int i = 0; i < 7; i++)
-				{
-					cout << "    ";
-					for(int j = 0; j < 58; j++)
-					{
-						cout << static_cast<char>(niyin[i][j]);
-					}
-					cout << endl;
-				}
-				*/
-	std ::string wining;
-  std::ifstream myfile ("youwin.txt");
+		{
+			resetlevel();
+			keyinputaa = true;
+			render();
+			gotoXY (0, 17);
+			c.X = 0;
+			int ycoord = 17;
+			c.Y = ycoord;
+			colour(colorskappa[14]);
+			std ::string wining;
+			std::ifstream myfile ("youwin.txt");
   if (myfile.is_open())
   {
     while ( getline (myfile,wining) )
@@ -604,19 +547,16 @@ void render()
 	  c.Y = ycoord;
 	  g_Console.writeToBuffer(c, wining);
 	  ycoord++;
-      //cout << wining << '\n';
     }
     myfile.close();
   }
 
   else cout << "Unable to open file"; 
-				_getch();
 				
 			}
 			else if(level1[charLocation.Y-1][charLocation.X] != 1)
 			{
 				resetlevel();
-				//loadlevel();
 				keyinputaa = true;
 				render();
 				gotoXY (0, 19);
@@ -624,22 +564,6 @@ void render()
 				int ycoord = 19;
 				c.Y = ycoord;
 				colour(colorskappa[14]);
-				//cout<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<"      "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
-				//cout<<"    "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"     "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-				//cout<<"    "<<" "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<" "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"     "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
-				//cout<<"    "<<"  "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"  "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"     "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-				//cout<<"    "<<"   "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<"   "<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<"    "<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<static_cast<char>(200)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(201)<<static_cast<char>(188)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(186)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(219)<<static_cast<char>(187)<<endl;
-				//cout<<"    "<<"   "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(188)<<"    "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"  "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<"     "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<" "<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<static_cast<char>(200)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(205)<<static_cast<char>(188)<<endl;
-				//cout<<"    "<<"                     The level has been reset";
-				/*for(int i = 0; i < 7; i++)
-				{
-					cout << "    ";
-					for(int j = 0; j < 68; j++)
-					{
-						cout << static_cast<char>(nishu[i][j]);
-					}
-					cout << endl;
-				}*/
 				std ::string losing;
   std::ifstream myfile ("youlose.txt");
   if (myfile.is_open())
@@ -649,40 +573,13 @@ void render()
 	  c.Y = ycoord;
 	  g_Console.writeToBuffer(c, losing);
 	  ycoord++;
-      //cout << losing << '\n';
     }
     myfile.close();
   }
 
-  else cout << "Unable to open file"; 
-				_getch();
-				
+  else cout << "Unable to open file"; 		
 			}
-		// render time taken to calculate this frame
-		gotoXY(70, 0);
-		colour(0x1A);
-		std::cout << 1.0 / g_dDeltaTime << "fps" << std::endl;
-  
-		gotoXY(0, 0);
-		colour(0x59);
-		std::cout << g_dElapsedTime << "secs" << std::endl;
-
-		// render character
-		//gotoXY(charLocation);
-		//colour(0x0C);
-		//std::cout << (char)1;
 	}
-    /*clearScreen();      // clears the current screen and draw from scratch 
-    switch (g_eGameState)
-    {
-        case S_SPLASHSCREEN: renderSplashScreen();
-            break;
-        case S_GAME: renderGame();
-            break;
-    }
-    renderFramerate();  // renders debug information, frame rate, elapsed time, etc
-    renderToScreen();   // dump the contents of the buffer to the screen, one frame worth of game
-	*/
 	renderFramerate();
 }
 void renderMainMenu()
@@ -823,6 +720,7 @@ void renderFramerate()
     c.X = 0;
     c.Y = 0;
     g_Console.writeToBuffer(c, ss.str(), 0x59);
+	g_Console.flushBufferToConsole();
 	
 }
 void renderToScreen()
@@ -840,14 +738,60 @@ void errorreport()
 }
 int newmainmenu()
 {
-	while (true)
-	{
 		keyinputaa = true;
 		colour(colors[15]);
-		int x = menu();
+		if(ministate == 0)
+		{
+			ministate = menu();
+			return 0;
+		}
+		else if(ministate == 1)
+		{
+			levelselected = levelselect();
+			if(levelselected == 68)
+			{
+				ministate = 0;
+				return 0;
+			}
+			ministate = 0;
+			return levelselected;
+		}
+		else if(ministate == 2)
+		{
+			challengeselected = challenge();
+			if(challengeselected == 4)
+			{
+				ministate = 0;
+				return 0;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		else if(ministate == 3)
+		{
+			achievementselected = achievement();
+			if(achievementselected == 4)
+			{
+				ministate = 0;
+				return 0;
+			}
+			else
+			{
+				ministate = 0;
+				return 0;
+			}
+		}
+		else if(ministate == 69)
+		{
+			return 69;
+		}
+		/*int x = menu();
 		switch (x)
 		{
 		case 1:
+			game
 			while (levelfix)
 			{
 				y = levelselect();
@@ -870,8 +814,7 @@ int newmainmenu()
 			break;
 		case 69:
 			return 69;
-		}
-	}
+		}*/
 }
 void loadlevel(){
 	//laser up
@@ -1884,16 +1827,29 @@ void loadlight(){
 }
 void resetlevel()
 {
-	for (int i = 0; i < 16; ++i)
+	if(levelselected == 1)
 	{
-		for(int j = 0; j < 48; ++j)
+		for(int i = 0; i < 16; i++)
 		{
-			level1[i][j] = level1reset[i][j];
+			for(int j = 0; j < 48; j++)
+			{
+				level1[i][j] = blevel1[i][j];
+			}
 		}
+	}
+	else if(levelselected == 2)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level2[i][j];
+				}
+			}
 	}
 	charLocation.X = 1;
 	charLocation.Y = 2;
-	g_dElapsedTime = 0.0;
+	//g_dElapsedTime = 0.0;
 }
 int levelselect()
 {
@@ -1904,20 +1860,20 @@ int levelselect()
 	gotoXY(2,0);
 	colour(colors[15]);
 	std:: string line;
-  std::ifstream myfile ("levelselect.txt");
-  int ycoord = 0;
-  if (myfile.is_open())
-  {
-    while ( getline (myfile,line) )
-    {
-		c.X = 0;
-		c.Y = ycoord;
-        //cout << line << '\n';
-		g_Console.writeToBuffer(c, line);
-		ycoord++;
-    }
-    myfile.close();
-  }
+	std::ifstream myfile ("levelselect.txt");
+	int ycoord = 0;
+	if (myfile.is_open())
+	{
+		while ( getline (myfile,line) )
+		{
+			c.X = 0;
+			c.Y = ycoord;
+			//cout << line << '\n';
+			g_Console.writeToBuffer(c, line);
+			ycoord++;
+		}
+		myfile.close();
+	}
 
   else cout << "Unable to open file";
 
@@ -2020,7 +1976,7 @@ int levelselect()
 	c.Y = 8;
     g_Console.writeToBuffer(c, ">");
 
-	c.X = 12;
+	c.X = 13;
 	c.Y = 8;
     g_Console.writeToBuffer(c, "<");
 	 g_Console.flushBufferToConsole();
@@ -2029,7 +1985,7 @@ int levelselect()
 	levelnumber = 1;
 	int leftarrowX = 2;
 	int leftarrowY = 8;
-	int rightarrowX = 12;
+	int rightarrowX = 13;
 	int rightarrowY = 8;
 	system("pause > nul");
 	while(true)
@@ -2087,7 +2043,7 @@ int levelselect()
 			c.Y = rightarrowY;
 			g_Console.writeToBuffer(c, " ");
 			leftarrowX -= 20;
-			rightarrowX -= 21;
+			rightarrowX -= 20;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, ">");
@@ -2108,7 +2064,7 @@ int levelselect()
 			c.Y = rightarrowY;
 			g_Console.writeToBuffer(c, " ");
 			leftarrowX += 20;
-			rightarrowX += 21;
+			rightarrowX += 20;
 			c.X = leftarrowX;
 			c.Y = leftarrowY;
 			g_Console.writeToBuffer(c, ">");
@@ -2136,70 +2092,46 @@ int menu()
 {   g_Console.clearBuffer(0x0F);
 	COORD c ;
     cls();
-    int count = 0 ;
+    int count = count2 ;
 
-          std::  string line;
-  std::ifstream myfile ("TGK.txt");
-  int ycoord = 0;
-  if (myfile.is_open())
-  {
-	  
-    while ( getline (myfile,line) )
-    {
-		c.X = 0;
-		c.Y = ycoord;
-//cout  << line << '\n';
-		 g_Console.writeToBuffer(c, line, 0x0A);
-		 ycoord++;
-    }
-    myfile.close();
-  }
-
-  else cout << "Unable to open file"; 
+    std::  string line;
+	std::ifstream myfile ("TGK.txt");
+	int ycoord = 0;
+	if (myfile.is_open())
+	{
+		while ( getline (myfile,line) )
+		{
+			c.X = 0;
+			c.Y = ycoord;
+			g_Console.writeToBuffer(c, line, 0x0A);
+			ycoord++;
+		}
+		myfile.close();
+	}
+	else cout << "Unable to open file"; 
 	rainbowhere += 1;
 	if(rainbowhere > 14)
 	{
 		rainbowhere = 9;
 	}
 	colour(colorskappa[rainbowhere]);
-	/*
-    ////cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;     
-    cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(219)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl;   
-    cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(176)<<static_cast<char>(176) << endl;
-    cout << static_cast<char>(219)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(219)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(219)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(177)<<static_cast<char>(178)<<static_cast<char>(219)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(219)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(220)<<static_cast<char>(219)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(178)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(177)<<static_cast<char>(223)<<static_cast<char>(178)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(219)<<static_cast<char>(178)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(219)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;   
-    cout << static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(223)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(219)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(177)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(219)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ; 
-    cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;
-    cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(219)<<static_cast<char>(220)<<static_cast<char>(177)<<static_cast<char>(177)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(177)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176) << endl ;  
-    cout << static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(223)<<static_cast<char>(223)<<static_cast<char>(219)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(220)<<static_cast<char>(223)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176)<<static_cast<char>(176);
-	*/
 	std:: string keepo;
-  std::ifstream anotherfile ("kapp.txt");
-  ycoord = 15;
-  if (anotherfile.is_open())
-  {
-    while ( getline (anotherfile,keepo) )
-    {
-		c.X = 0;
-		c.Y = ycoord;
-		 g_Console.writeToBuffer(c, keepo);
-		 ycoord++;
-      //cout << keepo << '\n';
-    }
-    anotherfile.close();
-  }
-
-  else cout << "Unable to open file"; 
-
+	std::ifstream anotherfile ("kapp.txt");
+	ycoord = 15;
+	if (anotherfile.is_open())
+	{
+		while ( getline (anotherfile,keepo) )
+		{
+			c.X = 0;
+			c.Y = ycoord;
+			g_Console.writeToBuffer(c, keepo);
+			ycoord++;
+		}
+		anotherfile.close();
+	}
+	else cout << "Unable to open file";
 
 	colour(colors[15]);
-
 	
     c.X = 45;
     c.Y = 14; 
@@ -2226,13 +2158,32 @@ int menu()
     c.Y = 23; 
 	g_Console.writeToBuffer(c, "EXITERINO"); 
    
-	c.X = 45;
-    c.Y = 17;
-    g_Console.writeToBuffer(c, ">"); 
-    g_Console.flushBufferToConsole();/////
+	if(count == 0)
+	{
+		c.X = 45;
+		c.Y = 17;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+	else if(count == 1)
+	{
+		c.X = 45;
+		c.Y = 19;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+	else if(count == 2)
+	{
+		c.X = 45;
+		c.Y = 21;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+	else if(count == 3)
+	{
+		c.X = 45;
+		c.Y = 23;
+		g_Console.writeToBuffer(c, ">"); 
+	}
+    g_Console.flushBufferToConsole();
 	int frequency = 2640;
-    while (true)  
-    {
         getInput();     
         if ( g_abKeyPressed[K_DOWN] == 1 )    
         {
@@ -2250,7 +2201,7 @@ int menu()
 				frequency -= 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                system("pause > nul");
+                //system("pause > nul");
             }
             else if ( count == 1 )   
             {
@@ -2267,7 +2218,7 @@ int menu()
 				frequency -= 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                system("pause > nul");
+                //system("pause > nul");
             }
             else if ( count == 2 ) 
             {
@@ -2283,7 +2234,7 @@ int menu()
 				frequency -= 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                system("pause > nul");
+                //system("pause > nul");
             }
 			
         }   
@@ -2303,7 +2254,7 @@ int menu()
 				frequency += 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                system("pause > nul");
+                //system("pause > nul");
             }
             else if ( count == 2 ) 
             {
@@ -2319,7 +2270,7 @@ int menu()
 				frequency += 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                system("pause > nul");
+                //system("pause > nul");
             }
             else if ( count == 3 )   
             {
@@ -2335,7 +2286,7 @@ int menu()
 				frequency += 300;
 			Beep(frequency, 60);
 			g_Console.flushBufferToConsole();
-                system("pause > nul");
+                //system("pause > nul");
             }
         }     
         else if ( g_abKeyPressed[K_RETURN] == 1 )        
@@ -2343,17 +2294,14 @@ int menu()
             if ( count == 0 )  
             {
                 return 1;  
-                break; 
             }
             if ( count == 1 )   
             {
                 return 2;    
-                break;
             }  
             if ( count == 2 )  
             {
                 return 3;   
-                break;
             }
             if ( count == 3 )      
             {
@@ -2421,8 +2369,9 @@ int menu()
                 return 69;
 
             }   
-        }
-    }   
+        } 
+		count2 = count;
+		return 0;
 }
 int challenge() 
 {
@@ -2438,7 +2387,6 @@ int challenge()
     {
 		c.X = 0;
 		c.Y = ycoord;
-      //cout << line << '\n';
 		g_Console.writeToBuffer(c, line);
 		ycoord++;
     }
