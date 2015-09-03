@@ -8,6 +8,9 @@
 #include <conio.h>
 #include <string>
 #include <fstream>
+#include <Windows.h>
+#include<MMSystem.h>
+#pragma comment (lib, "winmm")
 
 using std::cin;
 using std::cout;
@@ -27,17 +30,18 @@ int levelselected = 0;
 int challengeselected = 0;
 int achievementselected = 0;
 int count2 = 0;
-int levelarrowX = 2;
+int levelarrowX = 22;
 int levelarrowY = 8;
-int challengearrowX = 2;
-int challengearrowY = 10;
+int challengearrowX = 32;
+int challengearrowY = 10;        
 int levelno = 1;
 int level1[16][48];
 int level1AI[16][48];
 void loadlevel();
 void loadlight();
 void moveCharacter();
-
+int deathcounter = 0;
+int wincounter = 0;
 COORD charLocation;
 COORD consoleSize;
 
@@ -265,7 +269,7 @@ bool collisiondetection(int x)
 void update(double dt)
 {
 	
-	switch(gamestate)
+	/*switch(gamestate)
 	{
 		// main menu
 		case 1: updateSplashScreen();
@@ -284,7 +288,7 @@ void update(double dt)
 		case 6: updateStats();
 			break;
 		
-	}
+	}*/
 	
     // get the delta time
     g_dElapsedTime += dt;
@@ -347,6 +351,8 @@ void shutdown( void )
 }
 void init( void )
 {
+	PlaySound(TEXT("Beat1.wav"), NULL, SND_FILENAME|SND_LOOP|SND_ASYNC);
+
 	g_dBounceTime = 0.0;
 
     std::cout << std::fixed << std::setprecision(3);
@@ -396,9 +402,13 @@ void render()
 	renderToScreen();
 
 	////////////////////////
-	if(gamestate == 1)
+	//if(gamestate == 1)
+	//{
+	int x;
+	switch(gamestate)
 	{
-		int x = newmainmenu();
+	case 1:
+		x = newmainmenu();
 		if(x == 69)
 		{
 			g_bQuitGame = true;
@@ -444,13 +454,275 @@ void render()
 			charLocation.X = 1;
 			charLocation.Y = 2;
 		}
+		else if(x == 3)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level3[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level3AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x ==4)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level4[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level4AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 5)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level5[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level5AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 6)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level6[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level6AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 7)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level7[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level7AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 8)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level8[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level8AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 9)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level9[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level9AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 10)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level10[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level10AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 11)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level11[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level11AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 12)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level12[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level12AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 13)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level13[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level13AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 14)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level14[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level14AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
+		else if(x == 15)
+		{
+			gamestate = 2;
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level15[i][j];
+				}
+			}
+			for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1AI[i][j] = level15AI[i][j];
+				}
+			}
+			charLocation.X = 1;
+			charLocation.Y = 2;
+		}
 		else
 		{
 			return;
 		}
-	}
-	else if(gamestate == 2)
-	{
+	//}
+	//else if(gamestate == 2)
+	//{
+	case 2:
+		renderLevelSelect();
 		renderFramerate();
 		if(!keyinputaa)
 		{
@@ -486,8 +758,7 @@ void render()
 				}
 				myfile.close();
 			}
-
-			else cout << "Unable to open file"; 
+			wincounter += 1;
 				
 		}
 		else if(level1[charLocation.Y-1][charLocation.X] != 1)
@@ -512,8 +783,7 @@ void render()
 				}
 				myfile.close();
 			}
-
-		else cout << "Unable to open file"; 		
+ 		    deathcounter += 1;
 		}
 	}
 	renderFramerate();
@@ -538,7 +808,6 @@ void renderMainMenu()
 		}
 		myfile.close();
 	}
-	else cout << "Unable to open file"; 
 	rainbowhere += 1;
 	if(rainbowhere > 14)
 	{
@@ -559,7 +828,6 @@ void renderMainMenu()
 		}
 		anotherfile.close();
 	}
-	else cout << "Unable to open file";
 
 	colour(colors[15]);
 	
@@ -582,11 +850,11 @@ void renderMainMenu()
       
 	c.X = 48;
     c.Y = 21; 
-    g_Console.writeToBuffer(c, "ACHIEVEMENTS & OPTIONS"); 
+    g_Console.writeToBuffer(c, "STATISTICS"); 
 
 	c.X = 48;
     c.Y = 23; 
-	g_Console.writeToBuffer(c, "EXITERINO"); 
+	g_Console.writeToBuffer(c, "EXIT GAME"); 
 
 	int count = count2 ;
    
@@ -618,7 +886,113 @@ void renderMainMenu()
 }
 void renderLevelSelect()
 {
+	    COORD c;
+    std::ostringstream ss;
+    ss << std::fixed << std::setprecision(3);
+    ss.str("");
+    ss << "Level " << levelselected;
+	c.X = g_Console.getConsoleSize().X - 50;
+    c.Y = 0;
+    g_Console.writeToBuffer(c, ss.str());
+    g_Console.flushBufferToConsole();
 
+if (levelselected == 1)
+    {
+        ss.str("");
+        ss << "JUST RUN";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 2)
+    {
+        ss.str("");
+        ss << "Follow behind the guards!";
+        c.X = g_Console.getConsoleSize().X - 30; 
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 3)
+    {
+        ss.str("");
+        ss << "Stuck? Touch the laser arrow";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 4)
+    {
+        ss.str("");
+        ss << "Watch out, you are not the";
+        c.X = g_Console.getConsoleSize().X - 40;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+		ss.str("");
+        ss << "only one who can interact with laser!";
+        c.Y = 3;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 5)
+    {
+        ss.str("");
+        ss << "Look out above!";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 6)
+    {
+        ss.str("");
+        ss << "Be patient, and watch the";
+        c.X = g_Console.getConsoleSize().X - 33;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+		ss.str("");
+        ss << "guard's patterns";
+        c.Y = 3;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 7)
+    {
+        ss.str("");
+        ss << "Now...put what you have";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+		ss.str("");
+		ss << "learnt together.";
+		c.Y = 3;
+		g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 8)
+    {
+        ss.str("");
+        ss << "MOAR LASER! thread carefully";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 9)
+    {
+        ss.str("");
+        ss << "Hint: guard's movement are";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+		ss.str("");
+        ss << "still not random!";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 3;
+        g_Console.writeToBuffer(c, ss.str());
+    }
+    if (levelselected == 10)
+    {
+        ss.str("");
+        ss << "Turn off lasers carefully...";
+        c.X = g_Console.getConsoleSize().X - 30;
+        c.Y = 2;
+        g_Console.writeToBuffer(c, ss.str());
+    }
 }
 void renderChallenges()
 {
@@ -642,67 +1016,21 @@ void renderChallenges()
 
   else cout << "Unable to open file"; 
 
-    c.X = 4;
+    c.X = 34;
 	c.Y = 10;
 	g_Console.writeToBuffer(c, "Level 1");
-	c.X = 4;
+	c.X = 34;
 	c.Y = 14;
 	g_Console.writeToBuffer(c, "Level 2");
-	c.X = 4;
+	c.X = 34;
 	c.Y = 18;
 	g_Console.writeToBuffer(c, "Level 3");
-	c.X = 4;
+	c.X = 34;
 	c.Y = 22;
 	g_Console.writeToBuffer(c, "Level 4");
-	c.X = 4;
+	c.X = 34;
 	c.Y = 26;
 	g_Console.writeToBuffer(c, "Level 5");
-	c.X = 24;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, "Level 6");
-	c.X = 24;
-	c.Y = 14;
-	g_Console.writeToBuffer(c, "Level 7");
-	c.X = 24;
-	c.Y = 18;
-	g_Console.writeToBuffer(c, "Level 8");
-	c.X = 24;
-	c.Y = 22;
-	g_Console.writeToBuffer(c, "Level 9");
-	c.X = 24;
-	c.Y = 26;
-	g_Console.writeToBuffer(c, "Level 10");
-	c.X = 44;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, "Level 11");
-	c.X = 44;
-	c.Y = 14;
-	g_Console.writeToBuffer(c, "Level 12");
-	c.X = 44;
-	c.Y = 18;
-	g_Console.writeToBuffer(c, "Level 13");
-	c.X = 44;
-	c.Y = 22;
-	g_Console.writeToBuffer(c, "Level 14");
-	c.X = 44;
-	c.Y = 26;
-	g_Console.writeToBuffer(c, "Level 15");
-	c.X = 64;
-	c.Y = 10;
-	g_Console.writeToBuffer(c, "Level 16");
-	c.X = 64;
-	c.Y = 14;
-	g_Console.writeToBuffer(c, "Level 17");
-	c.X = 64;
-	c.Y = 18;
-	g_Console.writeToBuffer(c, "Level 18");
-	c.X = 64;
-	c.Y = 22;
-	g_Console.writeToBuffer(c, "Level 19");
-	c.X = 64;
-	c.Y = 26;
-	g_Console.writeToBuffer(c, "Level 20");
-
 	c.X = challengearrowX;
 	c.Y = challengearrowY;
 	g_Console.writeToBuffer(c, ">");  
@@ -874,18 +1202,22 @@ int newmainmenu()
 				return 0;
 			}
 		case 2:
-			challengeselected = challenge();
-			if(challengeselected == 4)
+			levelselected = challenge();
+			if(levelselected == 68)
 			{
 				ministate = 0;
 				return 0;
+			}
+			else if(levelselected != 0 )
+			{
+				return levelselected;
 			}
 			else
 			{
 				return 0;
 			}
 		case 3:
-			achievementselected = achievement();
+			achievementselected = stats();
 			if(achievementselected == 4)
 			{
 				ministate = 0;
@@ -1930,12 +2262,142 @@ void resetlevel()
 				}
 			}
 	}
+	else if(levelselected == 3)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level3[i][j];
+				}
+			}
+	}
+	else if(levelselected == 4)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level4[i][j];
+				}
+			}
+	}
+	else if(levelselected == 5)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level5[i][j];
+				}
+			}
+	}
+	else if(levelselected == 6)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level6[i][j];
+				}
+			}
+	}
+	else if(levelselected == 7)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level7[i][j];
+				}
+			}
+	}
+	else if(levelselected == 8)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level8[i][j];
+				}
+			}
+	}
+	else if(levelselected == 9)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level9[i][j];
+				}
+			}
+	}
+	else if(levelselected == 10)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level10[i][j];
+				}
+			}
+	}
+	else if(levelselected == 11)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level11[i][j];
+				}
+			}
+	}
+	else if(levelselected == 12)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level12[i][j];
+				}
+			}
+	}
+	else if(levelselected == 13)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level13[i][j];
+				}
+			}
+	}
+	else if(levelselected == 14)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level14[i][j];
+				}
+			}
+	}
+	else if(levelselected == 15)
+	{
+		for(int i = 0; i < 16; i++)
+			{
+				for(int j = 0; j < 48; j++)
+				{
+					level1[i][j] = level15[i][j];
+				}
+			}
+	}
 	charLocation.X = 1;
 	charLocation.Y = 2;
 	//g_dElapsedTime = 0.0;
 }
 int levelselect()
-{
+{  
 	g_Console.clearBuffer(0x0F);
 	COORD c ;
 	colour(0x0F);
@@ -1956,103 +2418,46 @@ int levelselect()
 		}
 		myfile.close();
 	}
-
-  else cout << "Unable to open file";
-
-	c.X = 4;
+	c.X = 24;
 	c.Y = 8;
     g_Console.writeToBuffer(c, "Level 1");
 
-	c.X = 4;
+	c.X = 24;
 	c.Y = 12;
     g_Console.writeToBuffer(c, "Level 2");
 
-	c.X = 4;
+	c.X = 24;
 	c.Y = 16;
     g_Console.writeToBuffer(c, "Level 3");
 	
-	c.X = 4;
+	c.X = 24;
 	c.Y = 20;
     g_Console.writeToBuffer(c, "Level 4");
 
 	
-	c.X = 4;
+	c.X = 24;
 	c.Y = 24;
     g_Console.writeToBuffer(c, "Level 5");
 
-	c.X = 24;
+	c.X = 44;
 	c.Y = 8;
     g_Console.writeToBuffer(c, "Level 6");
 
-	c.X = 24;
+	c.X = 44;
 	c.Y = 12;
     g_Console.writeToBuffer(c, "Level 7");
 
-	c.X = 24;
+	c.X = 44;
 	c.Y = 16;
     g_Console.writeToBuffer(c, "Level 8");
 
-	c.X = 24;
+	c.X = 44;
 	c.Y = 20;
     g_Console.writeToBuffer(c, "Level 9");
 	
-
-	c.X = 24;
+	c.X = 44;
 	c.Y = 24;
     g_Console.writeToBuffer(c, "Level 10");
-	
-
-	c.X = 44;
-	c.Y = 8;
-    g_Console.writeToBuffer(c, "Level 11");
-	
-
-	c.X = 44;
-	c.Y = 12;
-    g_Console.writeToBuffer(c, "Level 12");
-	
-
-	c.X = 44;
-	c.Y = 16;
-    g_Console.writeToBuffer(c, "Level 13");
-
-
-	c.X = 44;
-	c.Y = 20;
-    g_Console.writeToBuffer(c, "Level 14");
-
-	c.X = 44;
-	c.Y = 20;
-    g_Console.writeToBuffer(c, "Level 14");
-
-
-	c.X = 44;
-	c.Y = 24;
-    g_Console.writeToBuffer(c, "Level 15");
-
-
-	c.X = 64;
-	c.Y = 8;
-    g_Console.writeToBuffer(c, "Level 16");
-	
-
-	c.X = 64;
-	c.Y = 12;
-    g_Console.writeToBuffer(c, "Level 17");
-
-
-	c.X = 64;
-	c.Y = 16;
-    g_Console.writeToBuffer(c, "Level 18");
-
-	c.X = 64;
-	c.Y = 20;
-    g_Console.writeToBuffer(c, "Level 19");
-	
-
-	c.X = 64;
-	c.Y = 24;
-    g_Console.writeToBuffer(c, "Level 20");
 	
 	c.X = levelarrowX;
 	c.Y = levelarrowY;
@@ -2106,7 +2511,7 @@ int levelselect()
 			gotoXY(2,0);
 			g_Console.flushBufferToConsole();
 		}
-		else if(g_abKeyPressed[K_RIGHT] && levelnumber < 16 && g_dBounceTime < g_dElapsedTime)
+		else if(g_abKeyPressed[K_RIGHT] && levelnumber < 6 && g_dBounceTime < g_dElapsedTime)
 		{
 			g_dBounceTime = g_dElapsedTime + 0.125;
 			levelnumber += 5;
@@ -2122,13 +2527,11 @@ int levelselect()
 		}
 		else if(g_abKeyPressed[K_RETURN] && g_dBounceTime < g_dElapsedTime)
 		{
-			cout << "seriously? no";
 			g_Console.clearBuffer(0x0F);
 			return levelnumber;
 		}
 		else if(g_abKeyPressed[K_ESCAPE] && g_dBounceTime < g_dElapsedTime)
-		{
-			cout << "hello my friends";	
+		{	
 			g_dBounceTime = g_dElapsedTime + 0.125;
 			return 68;
 		}
@@ -2255,6 +2658,7 @@ int menu()
         }
         if ( count == 1 )   
         {
+            levelnumber = 11 ;
             return 2;    
         }  
         if ( count == 2 )  
@@ -2334,30 +2738,10 @@ int challenge()
 	renderChallenges();
     if ( g_abKeyPressed[K_ESCAPE] == 1 )   
     {
-        return 4;  
+        levelnumber = 1; 
+        g_dBounceTime = g_dElapsedTime + 0.125;
+	    return 68; 
     }
-    if ( ( g_abKeyPressed[K_RIGHT] == 1 ) && ( challengearrowX < 62 ) && g_dBounceTime < g_dElapsedTime )    
-    {
-		g_dBounceTime = g_dElapsedTime + 0.125;
-		c.X = challengearrowX;
-		c.Y = challengearrowY;
-		g_Console.writeToBuffer(c, " ");
-		challengearrowX += 20;
-		c.X = challengearrowX;
-		c.Y = challengearrowY;
-		g_Console.writeToBuffer(c, ">");
-    }    
-    if ( ( g_abKeyPressed[K_LEFT] == 1) && ( challengearrowX>5 ) && g_dBounceTime < g_dElapsedTime )    
-    {
-		g_dBounceTime = g_dElapsedTime + 0.125;
-        c.X = challengearrowX;
-		c.Y = challengearrowY;
-		g_Console.writeToBuffer(c, " ");
-		challengearrowX -= 20;
-		c.X = challengearrowX;
-		c.Y = challengearrowY;
-		g_Console.writeToBuffer(c, ">");
-    }    
     if ( ( g_abKeyPressed[K_DOWN] == 1 ) && ( challengearrowY < 26 ) && g_dBounceTime < g_dElapsedTime )  
     {
 		g_dBounceTime = g_dElapsedTime + 0.125;
@@ -2367,7 +2751,8 @@ int challenge()
 		challengearrowY += 4;
 		c.X = challengearrowX;
 		c.Y = challengearrowY;
-		g_Console.writeToBuffer(c, ">");
+		g_Console.writeToBuffer(c, ">");      
+        levelnumber += 1 ;
     } 
     if ( ( g_abKeyPressed[K_UP] == 1 ) && ( challengearrowY > 10 ) && g_dBounceTime < g_dElapsedTime )  
     {
@@ -2378,12 +2763,18 @@ int challenge()
 		challengearrowY -= 4;
 		c.X = challengearrowX;
 		c.Y = challengearrowY;
-		g_Console.writeToBuffer(c, ">");
+		g_Console.writeToBuffer(c, ">");    
+        levelnumber -= 1 ; 
+    }       
+    if ( (g_abKeyPressed[K_RETURN] == 1 ) && g_dBounceTime < g_dElapsedTime )     
+    {
+        g_Console.clearBuffer(0x0F);     
+        return levelnumber ;
     }
 	g_Console.flushBufferToConsole();
 	return 0;
 }   
-int achievement()  
+int stats()  
 {     
 	cls();
 	COORD c;
@@ -2392,7 +2783,7 @@ int achievement()
 	int ycoord = 0;
 	c.Y = ycoord;
     std:: string line;
-	std::ifstream myfile ("achi.txt");
+	std::ifstream myfile ("stats.txt");    
 	if (myfile.is_open())
 	{
 		while ( getline (myfile,line) )
@@ -2404,8 +2795,21 @@ int achievement()
 		}
 		myfile.close();
 	}
+	c.X = 5 ;   
+	c.Y = 10 ;    
+	g_Console.writeToBuffer(c,"You have died ");
+	c.X = 19 ;    
+	g_Console.writeToBuffer(c,static_cast<char>(deathcounter+48)) ;    
+	c.X = 24 ;    
+	g_Console.writeToBuffer(c,"times.");
 
-	else cout << "Unable to open file"; 
+	c.X = 5 ;   
+	c.Y = 15 ;    
+	g_Console.writeToBuffer(c,"You have completed ");
+	c.X = 24 ;    
+	g_Console.writeToBuffer(c,static_cast<char>(wincounter+48)) ;    
+	c.X = 29 ;    
+	g_Console.writeToBuffer(c,"levels.");
     getInput();
     if ( g_abKeyPressed[K_ESCAPE] == 1 )    
     {

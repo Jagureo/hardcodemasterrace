@@ -60,7 +60,7 @@ void renderToScreen();      // dump the contents of the buffer to the screen, on
 int levelselect();
 void resetlevel();
 void errorreport();
-int achievement();
+int stats();
 int challenge();
 int menu();
 int newmainmenu();
